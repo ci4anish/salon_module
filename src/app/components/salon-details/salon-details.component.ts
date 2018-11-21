@@ -1,10 +1,11 @@
-import {Component, OnInit} from '@angular/core';
-import {SalonInfoService} from '../../services/salon-info.service';
-import {SalonInfo} from '../../Interfaces/salon-info.interface';
-import {AvailableHours} from '../../Interfaces/available-hours.interface';
-import {Professional} from '../../Interfaces/professional.interface';
-import {SalonGeo} from '../../Interfaces/salon-geo.interface';
-import {Review} from '../../Interfaces/review.interface';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { SalonInfoService } from '../../services/salon-info.service';
+import { SalonInfo } from '../../Interfaces/salon-info.interface';
+import { AvailableHours } from '../../Interfaces/available-hours.interface';
+import { Professional } from '../../Interfaces/professional.interface';
+import { SalonGeo } from '../../Interfaces/salon-geo.interface';
+import { Review } from '../../Interfaces/review.interface';
 
 @Component({
   selector: 'app-salon-details',
@@ -16,7 +17,7 @@ export class SalonDetailsComponent implements OnInit {
   address;
   descriptionOfSalon: string;
   phoneNumber: string;
-  salon: number;
+  salonId: number;
   professionalsBySalon: Professional;
   weekTimeFrame;
   days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
@@ -24,12 +25,13 @@ export class SalonDetailsComponent implements OnInit {
   distance;
   locationReviews: Review = <Review>{};
 
-  constructor(private salonDetailsService: SalonInfoService) {
+  constructor(private salonDetailsService: SalonInfoService, private route: ActivatedRoute) {
   }
 
   ngOnInit() {
-    this.salon = 3;
-    this.salonDetailsService.getSalonInfo(this.salon)
+
+    this.salonId = parseInt((<any>this.route.snapshot.params).id);
+    this.salonDetailsService.getSalonInfo(this.salonId)
       .subscribe((data: SalonInfo) => {
         this.salonName = data.name;
         this.address = data.address.streetNameAndNumber + ', ' + data.address.city;
@@ -38,12 +40,12 @@ export class SalonDetailsComponent implements OnInit {
         this.paymentMethods = data.properties.paymentMethods;
       });
 
-    this.salonDetailsService.getProfessionalsBySalon(this.salon)
+    this.salonDetailsService.getProfessionalsBySalon(this.salonId)
       .subscribe((data: Professional) => {
         this.professionalsBySalon = data;
       });
 
-    this.salonDetailsService.getAvailabilityHours(this.salon)
+    this.salonDetailsService.getAvailabilityHours(this.salonId)
       .subscribe((data: AvailableHours) => {
         const arrDate = data.weekTimeFrame;
         arrDate.forEach((day) => {
@@ -58,7 +60,7 @@ export class SalonDetailsComponent implements OnInit {
         this.weekTimeFrame = arrDate;
       });
 
-    this.salonDetailsService.getLocationReviews(this.salon)
+    this.salonDetailsService.getLocationReviews(this.salonId)
       .subscribe((data: Review) => {
         this.locationReviews = data;
       });

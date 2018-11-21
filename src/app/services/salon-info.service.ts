@@ -9,7 +9,7 @@ import {Professional} from '../Interfaces/professional.interface';
   providedIn: 'root'
 })
 export class SalonInfoService {
-  url = 'https://3.120.139.153:32443/ciu-rest/';
+  url = 'https://www.cutitup.it:32443/ciu-rest/';
 
   constructor(private http: HttpClient) {
   }
@@ -19,8 +19,8 @@ export class SalonInfoService {
   }
 
 
-  getProfessionalsBySalon(salon: number): Observable<Professional> {
-    return this.http.get<Professional>(this.url + 'location/' + salon + '/professionals ');
+  getProfessionalsBySalon(salonId: number): Observable<Professional> {
+    return this.http.get<Professional>(this.url + 'location/' + salonId + '/professionals ');
   }
 
   // getAdminsBySalon(salon: number): any {
@@ -31,27 +31,27 @@ export class SalonInfoService {
   //
   // }
 
-  getAvailabilityHours(salon: number): Observable<AvailableHours> {
-    return this.http.get<AvailableHours>(this.url + 'availabilityhours/' + salon);
+  getAvailabilityHours(salonId: number): Observable<AvailableHours> {
+    return this.http.get<AvailableHours>(this.url + 'availabilityhours/' + salonId);
   }
 
-  getGeoLocationSalon(salon?: number): Observable<SalonGeo> {
+  getGeoLocationSalon(salonId?: number): Observable<SalonGeo> {
 
     // location #3 hasn't response to geo
     // i'm using location #1 , because it has response
 
-    return this.http.get<SalonGeo>(this.url + 'location/' + salon + '/geo');
+    return this.http.get<SalonGeo>(this.url + 'location/' + salonId + '/geo');
   }
 
-  getLocationGroupAll(salon?: number) {
-    return this.http.get(this.url + 'location/' + salon + '/group/all');
+  getLocationGroupAll(salonId?: number) {
+    return this.http.get(this.url + 'location/' + salonId + '/group/all');
   }
 
-  getLocationReviews(salon: number) {
-    return this.http.get(this.url + 'location/' + salon + '/reviews');
+  getLocationReviews(salonId: number) {
+    return this.http.get(this.url + 'location/' + salonId + '/reviews');
   }
 
-  getLocationServiceAll(salon: number) {
-    return this.http.get(this.url + 'location/' + salon + '/service/all/location');
+  getLocationServiceAll(salonId: number) {
+    return this.http.get(this.url + 'location/' + salonId + '/service/all/location');
   }
 }
