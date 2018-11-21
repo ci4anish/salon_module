@@ -36,8 +36,13 @@
 .style_calendar {
   color: #B2B2B2;
 }
+.style_text {
+  text-transform: capitalize;
+  text-align: left;
+}
 .focus_day {
   color: #000000;
+  text-transform: uppercase;
 }
 .payments {
   padding: 0 50px;
@@ -60,4 +65,11 @@
   border-radius: 25px;
   border: 1px solid;
   margin-right: 10px;
+}
+.payments_items {
+  p {
+    width: 100%;
+    text-align: left;
+  }
+  flex-wrap: wrap;
 }

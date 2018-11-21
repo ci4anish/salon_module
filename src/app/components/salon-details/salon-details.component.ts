@@ -43,24 +43,30 @@ export class SalonDetailsComponent implements OnInit {
     this.salonDetailsService.getProfessionalsBySalon(this.salon)
       .subscribe((data: ProfessionalInteface) => {
         this.professionalsBySalon = data;
-        // console.log(data);
       });
 
     this.salonDetailsService.getAvailabilityHours(this.salon)
-      .subscribe((data: AvailableHours) => {
+      .subscribe((data) => {
         const arrDate = data.weekTimeFrame;
-        arrDate.forEach((day) => {
-          day.weekDay = day.weekDay.toLowerCase();
-          day.timeFrame.startTimeMS = new Date(day.timeFrame.startTimeMS).getHours();
-          day.timeFrame.endTimeMS = new Date(day.timeFrame.endTimeMS).getHours();
-          if (day.weekDay === this.days[new Date().getDay()]) {
-            day.targetDay = true;
-          }
-        });
+        // arrDate.forEach((day) => {
+        //   day.weekDay = day.weekDay.toLowerCase();
+        //   console.log(day.timeFrame.startTimeMS)
+        //   day.timeFrame.startTimeMS = new Date(day.timeFrame.startTimeMS).getHours();
+        //   day.timeFrame.endTimeMS = new Date(day.timeFrame.endTimeMS).getHours();
+        //   if (day.weekDay === this.days[new Date().getDay()]) {
+        //     day.targetDay = true;
+        //   }
+        // });
+        arrDate.forEach(time => {
+          arrDate = arrDate.map(data => {
+            console.log(data)
+          })
+        })
+        console.log(arrDate)
         this.weekTimeFrame = arrDate;
       });
 
-    this.salonDetailsService.getReviewsLocation()
+    this.salonDetailsService.getLocationReviews()
       .subscribe((data: ReviewsInterface) => {
         this.locationReviews = data;
       });

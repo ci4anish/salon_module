@@ -6,7 +6,8 @@ export interface ReviewsInterface {
   averageReliability: number;
   averageStaff: number;
   averageValueForMoney: number;
-  reviews: [{
+  reviews: [
+    {
     appUser: {
       id: number;
     };

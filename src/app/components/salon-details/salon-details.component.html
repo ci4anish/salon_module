@@ -28,9 +28,9 @@
       <h5 class="salon_name">{{salonName}}</h5>
       <h6 class="salon_address">{{distance}}km - {{address}}</h6>
       <p>{{descriptionOfSalon}}</p>
-      <div class="payments ">
-        <p>Payments</p>
+      <div class="payments dis_flex">
         <div class="payments_items dis_flex" >
+          <p class="title_payments">Payments</p>
           <div *ngFor="let item of paymentMethods">
             <div *ngIf="item.method == 'CASH' ">
               <i class="fas fa-wallet"></i>
@@ -39,7 +39,7 @@
               <i class="far fa-credit-card"></i>
             </div>
             <div *ngIf="item.method == 'VOUCHER' ">
-              icon VOUCHER
+              <i class="fas fa-file-invoice-dollar"></i>
             </div>
           </div>
         </div>
@@ -59,8 +59,8 @@
         <p>Business hours</p>
         <table class="table_calendar">
           <tr *ngFor="let day of weekTimeFrame" class="style_calendar" [class.focus_day]="day.targetDay">
-            <td>{{day.weekDay}}</td>
-            <td>{{day.timeFrame.startTimeMS}} :</td>
+            <td class="style_text">{{day.weekDay}}</td>
+            <td>{{day.timeFrame.startTimeMS}} -</td>
             <td>{{day.timeFrame.endTimeMS}}</td>
           </tr>
         </table>

@@ -25,7 +25,7 @@ export class SalonServicesComponent implements OnInit {
           return serviceDescriptionArr.find(fullServiceInfo => fullServiceInfo.service.id === service.id);
         });
       });
-      console.log(this.serviceGroups);
+      console.log(this.serviceGroups)
     });
   }
 

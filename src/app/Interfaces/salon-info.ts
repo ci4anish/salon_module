@@ -27,7 +27,12 @@ export interface SalonInfoInterface {
   };
   professionalLinks: [{}];
   properties: {
-
+    dynamicLocationType: null;
+    locationType: string;
+    paymentMethods: [{
+      method: string;
+    }];
+    physicalLocationType: string;
   };
   reviews: [{}];
   schedule: [{}];

@@ -9,7 +9,7 @@ import {HeaderComponent} from './components/header/header.component';
 import {NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown';
 import {FormsModule} from '@angular/forms';
 import {FooterComponent} from './components/footer/footer.component';
-import {MatCheckboxModule, MatRadioButton, MatRadioGroup, MatRippleModule} from '@angular/material';
+import {MatCheckboxModule, MatListModule, MatRadioButton, MatRadioGroup, MatRippleModule} from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MapComponent} from './components/map/map.component';
 import { StarRatingComponent } from './components/star-rating/star-rating.component';
@@ -37,7 +37,8 @@ import { CommentsComponent } from './components/comments/comments.component';
     FormsModule,
     MatCheckboxModule,
     MatRippleModule,
-    BarRatingModule
+    BarRatingModule,
+    MatListModule
   ],
   providers: [],
   bootstrap: [AppComponent]

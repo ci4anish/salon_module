@@ -1,6 +1,7 @@
-#wrapper_service {
-  width: 100%;
+.wrapper_services {
   display: flex;
+  flex-wrap: wrap;
+  padding-top: 50px;
 }
 .box_service {
   width: 70%;
@@ -8,3 +9,8 @@
 .box_book-now {
   width: 30%;
 }
+.test_box {
+  width: 200px;
+  border-bottom: 1px solid;
+}
+

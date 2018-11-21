@@ -15,7 +15,7 @@ export class SalonInfoService {
 
   urlSalonInfo = 'https://3.120.139.153:32443/ciu-rest/location/3';
   urlProfessionalsBySalon = 'https://3.120.139.153:32443/ciu-rest/location/';
-  urlAvailabilityHours = 'https://www.cutitup.it:32443/ciu-rest/availabilityhours/';
+  urlAvailabilityHours = 'https://www.cutitup.it:32443/ciu-rest/availabilityhours/12';
   urlImgApi = 'https://3.120.139.153:32443/ciu-rest/image/';
 
   getSalonInfo(): any {
@@ -39,7 +39,7 @@ export class SalonInfoService {
   }
 
   getAvailabilityHours(salon: number): Observable<AvailableHours> {
-    return this.http.get<AvailableHours>(this.urlAvailabilityHours + salon);
+    return this.http.get<AvailableHours>(this.urlAvailabilityHours);
   }
 
   getGeoLocationSalon(salon?: number): Observable<SalonGeo> {
@@ -54,7 +54,7 @@ export class SalonInfoService {
     return this.http.get('https://3.120.139.153:32443/ciu-rest/location/3/group/all');
   }
 
-  getReviewsLocation() {
+  getLocationReviews() {
     return this.http.get('https://3.120.139.153:32443/ciu-rest/location/3/reviews');
   }
 

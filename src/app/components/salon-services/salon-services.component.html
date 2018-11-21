@@ -1,1 +1,49 @@
-
+<div class="container">
+  <div class="wrapper_services">
+    <div class="service_item dis_flex" >
+      <div class="title_item test_box test_wrap">
+        <h5>Name service</h5>
+      </div>
+      <div class="description_item" >
+        <div class="content_service-item">
+          <div class=" dis_flex">
+            <h5 class="test_box">Show service</h5>
+            <h5 class="test_box">Price</h5>
+            <h5 class="test_box">Gender</h5>
+            <h5 class="test_box">Description</h5>
+            <h5>Duration min</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="service_item dis_flex" *ngFor="let service of serviceGroups">
+      <div class="title_item test_box">
+        <h5>{{service.name}}</h5>
+      </div>
+      <div class="description_item" >
+        <div class="content_service-item" *ngFor="let subService of service.services">
+         <div class="test dis_flex">
+           <div class="test_box">{{subService.service.name}}</div>
+           <div class="test_box">{{subService.service.basePrice}}</div>
+           <div class="test_box">{{subService.service.gender}}</div>
+           <div class="test_box">{{subService.service.description}}</div>
+           <div class="test_box">{{subService.service.minutes}}</div>
+         </div>
+        </div>
+      </div>
+    </div>
+    <!--<table>-->
+      <!--<tr>-->
+        <!--<td>selected</td>-->
+        <!--<td>Hours</td>-->
+        <!--<td>Price</td>-->
+      <!--</tr>-->
+      <!--<tr *ngFor="let service of serviceGroups">-->
+        <!--<td>{{service.name}}</td>-->
+        <!--<td class="service_info" *ngFor="let info of service.services">-->
+          <!--{{info.service.basePrice}}-->
+        <!--</td>-->
+      <!--</tr>-->
+    <!--</table>-->
+  </div>
+</div>
