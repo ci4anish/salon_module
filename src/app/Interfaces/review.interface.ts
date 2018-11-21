@@ -1,4 +1,4 @@
-export interface ReviewsInterface {
+export interface Review {
   averageAmbient: number;
   averageCleanliness: number;
   averageIntegrity: number;
@@ -6,8 +6,7 @@ export interface ReviewsInterface {
   averageReliability: number;
   averageStaff: number;
   averageValueForMoney: number;
-  reviews: [
-    {
+  reviews: {
     appUser: {
       id: number;
     };
@@ -39,6 +38,6 @@ export interface ReviewsInterface {
     };
     title: string;
     weight: number;
-  }];
+  }[];
   totalNumberOfReviews: number;
 }

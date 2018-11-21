@@ -9,13 +9,14 @@ import {SalonInfoService} from '../../services/salon-info.service';
 })
 export class SalonServicesComponent implements OnInit {
   serviceGroups;
+
   constructor(private salonDetailsService: SalonInfoService) {
   }
 
   ngOnInit() {
     combineLatest(
-      this.salonDetailsService.getLocationGroupAll(),
-      this.salonDetailsService.getLocationServiceAll()
+      this.salonDetailsService.getLocationGroupAll(3),
+      this.salonDetailsService.getLocationServiceAll(3)
     ).subscribe(data => {
       this.serviceGroups = data[0];
       const serviceDescriptionArr = <any>data[1];
@@ -25,7 +26,6 @@ export class SalonServicesComponent implements OnInit {
           return serviceDescriptionArr.find(fullServiceInfo => fullServiceInfo.service.id === service.id);
         });
       });
-      console.log(this.serviceGroups)
     });
   }
 

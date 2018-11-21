@@ -1,4 +1,4 @@
-export interface ProfessionalInteface {
+export interface Professional {
   id: number;
   location: { id: number };
   numberOfServices: number;

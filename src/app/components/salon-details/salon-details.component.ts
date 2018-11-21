@@ -1,11 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {SalonInfoService} from '../../services/salon-info.service';
-import {SalonInfoInterface} from '../../Interfaces/salon-info';
-import {AvailableHours} from '../../Interfaces/available-hours';
-import {ProfessionalInteface} from '../../Interfaces/professional-inteface';
-import {SalonGeo} from '../../Interfaces/salon-geo';
-import {ReviewsInterface} from '../../Interfaces/reviews-interface';
-import {combineLatest, Observable} from 'rxjs';
+import {SalonInfo} from '../../Interfaces/salon-info.interface';
+import {AvailableHours} from '../../Interfaces/available-hours.interface';
+import {Professional} from '../../Interfaces/professional.interface';
+import {SalonGeo} from '../../Interfaces/salon-geo.interface';
+import {Review} from '../../Interfaces/review.interface';
 
 @Component({
   selector: 'app-salon-details',
@@ -18,21 +17,20 @@ export class SalonDetailsComponent implements OnInit {
   descriptionOfSalon: string;
   phoneNumber: string;
   salon: number;
-  professionalsBySalon: ProfessionalInteface;
+  professionalsBySalon: Professional;
   weekTimeFrame;
   days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-  salonGeo: SalonGeo;
   paymentMethods = [];
   distance;
-  locationReviews: ReviewsInterface = <ReviewsInterface>{};
+  locationReviews: Review = <Review>{};
 
   constructor(private salonDetailsService: SalonInfoService) {
   }
 
   ngOnInit() {
     this.salon = 3;
-    this.salonDetailsService.getSalonInfo()
-      .subscribe((data: SalonInfoInterface) => {
+    this.salonDetailsService.getSalonInfo(this.salon)
+      .subscribe((data: SalonInfo) => {
         this.salonName = data.name;
         this.address = data.address.streetNameAndNumber + ', ' + data.address.city;
         this.descriptionOfSalon = data.longDescription;
@@ -41,33 +39,27 @@ export class SalonDetailsComponent implements OnInit {
       });
 
     this.salonDetailsService.getProfessionalsBySalon(this.salon)
-      .subscribe((data: ProfessionalInteface) => {
+      .subscribe((data: Professional) => {
         this.professionalsBySalon = data;
       });
 
     this.salonDetailsService.getAvailabilityHours(this.salon)
-      .subscribe((data) => {
+      .subscribe((data: AvailableHours) => {
         const arrDate = data.weekTimeFrame;
-        // arrDate.forEach((day) => {
-        //   day.weekDay = day.weekDay.toLowerCase();
-        //   console.log(day.timeFrame.startTimeMS)
-        //   day.timeFrame.startTimeMS = new Date(day.timeFrame.startTimeMS).getHours();
-        //   day.timeFrame.endTimeMS = new Date(day.timeFrame.endTimeMS).getHours();
-        //   if (day.weekDay === this.days[new Date().getDay()]) {
-        //     day.targetDay = true;
-        //   }
-        // });
-        arrDate.forEach(time => {
-          arrDate = arrDate.map(data => {
-            console.log(data)
-          })
-        })
-        console.log(arrDate)
+        arrDate.forEach((day) => {
+          day.weekDay = day.weekDay.toLowerCase();
+          console.log(day.timeFrame.startTimeMS);
+          day.timeFrame.startTimeMS = new Date(day.timeFrame.startTimeMS).getHours();
+          day.timeFrame.endTimeMS = new Date(day.timeFrame.endTimeMS).getHours();
+          if (day.weekDay === this.days[new Date().getDay()]) {
+            day.targetDay = true;
+          }
+        });
         this.weekTimeFrame = arrDate;
       });
 
-    this.salonDetailsService.getLocationReviews()
-      .subscribe((data: ReviewsInterface) => {
+    this.salonDetailsService.getLocationReviews(this.salon)
+      .subscribe((data: Review) => {
         this.locationReviews = data;
       });
 
@@ -81,7 +73,7 @@ export class SalonDetailsComponent implements OnInit {
         const userLong = position.coords.longitude;
         let salonLat;
         let salonLong;
-        this.salonDetailsService.getGeoLocationSalon()
+        this.salonDetailsService.getGeoLocationSalon(1)
           .subscribe((data: SalonGeo) => {
             salonLat = data.deg.latitude;
             salonLong = data.deg.longitude;

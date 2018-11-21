@@ -1,6 +1,6 @@
-import {Component, ElementRef, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, OnInit, Output} from '@angular/core';
 import {SalonInfoService} from '../../services/salon-info.service';
-import {SalonGeo} from '../../Interfaces/salon-geo';
+import {SalonGeo} from '../../Interfaces/salon-geo.interface';
 
 @Component({
   selector: 'app-map',
@@ -14,7 +14,7 @@ export class MapComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.salonService.getGeoLocationSalon().subscribe((data: SalonGeo) => {
+    this.salonService.getGeoLocationSalon(1).subscribe((data: SalonGeo) => {
       this.salonGeoDeg = data.deg;
       this.initMap();
     });

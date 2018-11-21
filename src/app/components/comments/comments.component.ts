@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {SalonInfoService} from '../../services/salon-info.service';
-import {ReviewsInterface} from '../../Interfaces/reviews-interface';
+import {Review} from '../../Interfaces/review.interface';
 
 @Component({
   selector: 'app-comments',
@@ -15,9 +15,8 @@ export class CommentsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.salonInfo.getLocationReviews()
-      .subscribe((data: ReviewsInterface) => {
-        console.log(data)
+    this.salonInfo.getLocationReviews(3)
+      .subscribe((data: Review) => {
         const tempArr = data.reviews;
         tempArr.sort(function (a, b) {
           return b.ratingOverall - a.ratingOverall;

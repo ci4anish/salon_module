@@ -1,4 +1,4 @@
-export interface SalonAddressInterface {
+export interface SalonAddress {
   city: string;
   country: {};
   line1: string;
