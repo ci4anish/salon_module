@@ -1,0 +1,90 @@
+<!--<app-header></app-header>-->
+<section class="salon_details text-center">
+  <div class="container dis_flex">
+    <div class="details_wrapper ">
+      <div class="wrappper_icons">
+        <div class="wrapper_social-icons ">
+          <i class="far fa-heart"></i>
+          <i class="far fa-comments"></i>
+          <i class="fab fa-facebook-f"></i>
+        </div>
+        <h3 class="beauticians_title text-center">Meet our beauticians</h3>
+        <div class="personal_icon" *ngFor="let professional of professionalsBySalon">
+          <img src="" alt="{{professional}}">
+          <div>{{professional.id}}</div>
+        </div>
+      </div>
+
+      <div class="wrapper_language text-center">
+        <p>we speak</p>
+        <div class="wrapper_lang dis_flex">
+          <div class="lang_en">EN</div>
+          <div class="lang_it">IT</div>
+          <div class="lang_es">ES</div>
+        </div>
+      </div>
+    </div>
+    <div class="details_wrapper details_wrapper-top">
+      <h5 class="salon_name">{{salonName}}</h5>
+      <h6 class="salon_address">{{distance}}km - {{address}}</h6>
+      <p>{{descriptionOfSalon}}</p>
+      <div class="payments ">
+        <p>Payments</p>
+        <div class="payments_items dis_flex" >
+          <div *ngFor="let item of paymentMethods">
+            <div *ngIf="item.method == 'CASH' ">
+              <i class="fas fa-wallet"></i>
+            </div>
+            <div *ngIf="item.method == 'CARD' ">
+              <i class="far fa-credit-card"></i>
+            </div>
+            <div *ngIf="item.method == 'VOUCHER' ">
+              icon VOUCHER
+            </div>
+          </div>
+        </div>
+        <div class="payments_other">
+          <p>other</p>
+          <i class="material-icons">
+            wifi
+          </i>
+        </div>
+      </div>
+    </div>
+    <div class="details_wrapper">
+      <app-star-rating
+        [starRating]="locationReviews.averageOverall">
+      </app-star-rating>
+      <div class="business_hours">
+        <p>Business hours</p>
+        <table class="table_calendar">
+          <tr *ngFor="let day of weekTimeFrame" class="style_calendar" [class.focus_day]="day.targetDay">
+            <td>{{day.weekDay}}</td>
+            <td>{{day.timeFrame.startTimeMS}} :</td>
+            <td>{{day.timeFrame.endTimeMS}}</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="contact_info ">
+        <a href="tel:{{phoneNumber}}" class="dis_flex text-center">
+          <div class="phone_icon">
+            <i class="material-icons">
+              phone
+            </i>
+          </div>
+          <div class="number">
+            <p>{{phoneNumber}}</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+<app-salon-services></app-salon-services>
+
+<app-comments></app-comments>
+<app-map></app-map>
+<app-footer></app-footer>
+
+

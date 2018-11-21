@@ -1,0 +1,63 @@
+.salon_details {
+  padding-top: 25px;
+}
+.details_wrapper {
+  width: 30%;
+}
+.details_wrapper-top {
+  width: 40%;
+}
+.wrappper_icons {
+  display: flex;
+  flex-wrap: wrap;
+  .personal_icon {
+    text-align: center;
+    width: 30%;
+  }
+}
+.wrapper_social-icons {
+  font-size: 30px;
+  margin-bottom: 75px;
+  width: 100%;
+  i {
+    margin: 0 5px;
+  }
+}
+.beauticians_title {
+  width: 100%;
+}
+.salon_details {
+  border-bottom: 1px solid;
+}
+.table_calendar {
+  margin-top: 30px;
+  margin-left: auto;
+}
+.style_calendar {
+  color: #B2B2B2;
+}
+.focus_day {
+  color: #000000;
+}
+.payments {
+  padding: 0 50px;
+  justify-content: space-between;
+  i {
+    font-size: 26px;
+    margin-right: 5px;
+  }
+}
+.wrapper_lang {
+  justify-content: center;
+}
+.lang_en, .lang_es, .lang_it {
+  font-size: 10px;
+  display: flex;
+  width: 25px;
+  height: 25px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 25px;
+  border: 1px solid;
+  margin-right: 10px;
+}
