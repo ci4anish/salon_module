@@ -19,6 +19,6 @@ export class ProfessionalInfoService {
   }
 
   getProfessionalsById(id: number): Observable<Professional> {
-    return this.http.get(apiUrl+ 'professional/' + id);
+    return <Observable<Professional>>this.http.get(apiUrl+ 'professional/' + id);
   }
 }
