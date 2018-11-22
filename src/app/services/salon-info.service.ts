@@ -1,15 +1,16 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {SalonGeo} from '../Interfaces/salon-geo.interface';
-import {Observable} from 'rxjs';
-import {AvailableHours} from '../Interfaces/available-hours.interface';
-import {Professional} from '../Interfaces/professional.interface';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { SalonGeo } from '../Interfaces/salon-geo.interface';
+import { Observable } from 'rxjs';
+import { AvailableHours } from '../Interfaces/available-hours.interface';
+import { Professional } from '../Interfaces/professional.interface';
+import { apiUrl } from '../constants/app.constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SalonInfoService {
-  url = 'https://www.cutitup.it:32443/ciu-rest/';
+  url = apiUrl;
 
   constructor(private http: HttpClient) {
   }
