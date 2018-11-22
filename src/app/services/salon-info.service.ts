@@ -54,4 +54,8 @@ export class SalonInfoService {
   getLocationServiceAll(salonId: number) {
     return this.http.get(this.url + 'location/' + salonId + '/service/all/location');
   }
+
+  getLocationPortfolio(salonId: number) {
+    return this.http.get(this.url + 'location/' + salonId + '/portfolio')
+  }
 }

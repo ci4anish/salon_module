@@ -13,7 +13,25 @@
 .wrapper_comments {
   align-items: center;
   margin-bottom: 20px;
+  border-bottom: 1px dashed #f9fafa;
 }
 .comment_title {
   width: 30%;
+  display: flex;
+  align-items: center;
+}
+::ng-deep .br-units {
+  justify-content: center;
+  align-items: baseline!important;
+}
+.number_comment {
+  align-items: center;
+  margin-right: 10px;
+  font-weight: bold;
+}
+.box_shadow-container {
+  padding: 5px;
+  margin-bottom: 10px;
+  margin-top: 25px;
+  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.45);
 }

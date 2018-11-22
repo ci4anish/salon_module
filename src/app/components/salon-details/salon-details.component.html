@@ -9,14 +9,17 @@
           <i class="fab fa-facebook-f"></i>
         </div>
         <h3 class="beauticians_title text-center">Meet our beauticians</h3>
-        <div class="personal_icon" *ngFor="let professional of professionalsBySalon">
-          <img src="" alt="{{professional}}">
-          <div>{{professional.id}}</div>
+        <div class="wrapper_beauticians-icons dis_flex">
+          <div class="personal_icon" *ngFor="let professional of professionalsBySalon">
+            <!--<img src="./994628-200.png" alt="{{professional}}">-->
+            <img src="../../../assets/unknown_icon.png" alt="" class="beauticians_icon">
+            <div>{{professional.id}}</div>
+          </div>
         </div>
       </div>
 
       <div class="wrapper_language text-center">
-        <p>we speak</p>
+        <h3>we speak</h3>
         <div class="wrapper_lang dis_flex">
           <div class="lang_en">EN</div>
           <div class="lang_it">IT</div>
@@ -86,5 +89,11 @@
 <app-comments></app-comments>
 <app-map></app-map>
 <app-footer></app-footer>
+<div *ngFor="let img of portfolioImg">
+  <img src="{{img.url}}" alt="{{img.altText}}">
+</div>
 
+<app-date-picker></app-date-picker>
+
+<app-type-picker></app-type-picker>
 

@@ -1,38 +1,43 @@
 <div class="container">
-  <div class="wrapper_comments dis_flex" *ngFor="let item of arrBestComments; let i = index">
-    <div class="wrapper_main-comment dis_flex">
-      {{i}}.
-      <app-star-rating [starRating]="item.ratingOverall"></app-star-rating>
-    </div>
-    <div class="wrapper_description-comments ">
-       <div class="dis_flex">
-        <div class="comments_item dis_flex">
-          <div class="comment_title">
-            Ambient
-          </div>
-           <app-star-rating [starRating]="item.ratingAmbient"></app-star-rating>
+  <div class="box_shadow-container">
+    <div class="wrapper_comments dis_flex" *ngFor="let item of arrBestComments; let i = index">
+      <div class="wrapper_main-comment dis_flex">
+        <div class="number_comment dis_flex">
+          {{i}}
         </div>
-         <div class="comments_item dis_flex">
-           <div class="comment_title">
-             Value
-           </div>
+        <app-star-rating [starRating]="item.ratingOverall"></app-star-rating>
+      </div>
+      <div class="wrapper_description-comments ">
+        <div class="dis_flex">
+          <div class="comments_item dis_flex">
+            <div class="comment_title ">
+              Ambient
+            </div>
+            <app-star-rating [starRating]="item.ratingAmbient"></app-star-rating>
+          </div>
+          <div class="comments_item dis_flex">
+            <div class="comment_title">
+              Value
+            </div>
             <app-star-rating [starRating]="item.ratingValueForMoney"></app-star-rating>
-         </div>
-       </div>
-      <div class="dis_flex">
-        <div class="comments_item dis_flex">
-          <div class="comment_title">
-            Cleanliness
           </div>
-           <app-star-rating [starRating]="item.ratingCleanliness"></app-star-rating>
         </div>
-        <div class="comments_item dis_flex">
-          <div class="comment_title">
-            Staff
+        <div class="dis_flex">
+          <div class="comments_item dis_flex">
+            <div class="comment_title">
+              Cleanliness
+            </div>
+            <app-star-rating [starRating]="item.ratingCleanliness"></app-star-rating>
           </div>
-          <app-star-rating [starRating]="item.ratingStaff"></app-star-rating>
+          <div class="comments_item dis_flex">
+            <div class="comment_title">
+              Staff
+            </div>
+            <app-star-rating [starRating]="item.ratingStaff"></app-star-rating>
+          </div>
         </div>
       </div>
     </div>
+
   </div>
 </div>

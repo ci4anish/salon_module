@@ -1,5 +1,12 @@
 .salon_details {
   padding-top: 25px;
+  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.45);
+
+}
+.beauticians_icon {
+  width: 50px;
+  height: 50px;
+  display: block;
 }
 .details_wrapper {
   width: 30%;
@@ -12,7 +19,6 @@
   flex-wrap: wrap;
   .personal_icon {
     text-align: center;
-    width: 30%;
   }
 }
 .wrapper_social-icons {
@@ -26,12 +32,9 @@
 .beauticians_title {
   width: 100%;
 }
-.salon_details {
-  border-bottom: 1px solid;
-}
+
 .table_calendar {
-  margin-top: 30px;
-  margin-left: 50%;
+  margin: 20px auto 0;
 }
 .style_calendar {
   color: #B2B2B2;
@@ -39,10 +42,10 @@
 .style_text {
   text-transform: capitalize;
   text-align: left;
+  width: 115px;
 }
 .focus_day {
   color: #000000;
-  text-transform: uppercase;
 }
 .payments {
   padding: 0 50px;
@@ -73,4 +76,12 @@
   }
   flex-wrap: wrap;
 }
-
+.contact_info {
+  padding-top: 10px;
+  display: flex;
+  justify-content: center;
+}
+.wrapper_beauticians-icons {
+  justify-content: center;
+  width: 100%;
+}

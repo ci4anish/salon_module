@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {combineLatest} from 'rxjs';
 import {SalonInfoService} from '../../services/salon-info.service';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-salon-services',
@@ -9,14 +10,16 @@ import {SalonInfoService} from '../../services/salon-info.service';
 })
 export class SalonServicesComponent implements OnInit {
   serviceGroups;
-
-  constructor(private salonDetailsService: SalonInfoService) {
+  salonId;
+  constructor(private salonDetailsService: SalonInfoService, private route: ActivatedRoute) {
   }
 
   ngOnInit() {
+    this.salonId = parseInt((<any>this.route.snapshot.params).id);
+
     combineLatest(
-      this.salonDetailsService.getLocationGroupAll(3),
-      this.salonDetailsService.getLocationServiceAll(3)
+      this.salonDetailsService.getLocationGroupAll(this.salonId),
+      this.salonDetailsService.getLocationServiceAll(this.salonId)
     ).subscribe(data => {
       this.serviceGroups = data[0];
       const serviceDescriptionArr = <any>data[1];

@@ -4,8 +4,8 @@ export interface AvailableHours {
     targetDay?: boolean;
     weekDay: string;
     timeFrame: {
-      endTimeMS: number;
-      startTimeMS: number;
+      endTimeMS: string;
+      startTimeMS: string;
     }
   }];
 }

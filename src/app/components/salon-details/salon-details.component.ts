@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { SalonInfoService } from '../../services/salon-info.service';
-import { SalonInfo } from '../../Interfaces/salon-info.interface';
-import { AvailableHours } from '../../Interfaces/available-hours.interface';
-import { Professional } from '../../Interfaces/professional.interface';
-import { SalonGeo } from '../../Interfaces/salon-geo.interface';
-import { Review } from '../../Interfaces/review.interface';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {SalonInfoService} from '../../services/salon-info.service';
+import {SalonInfo} from '../../Interfaces/salon-info.interface';
+import {AvailableHours} from '../../Interfaces/available-hours.interface';
+import {Professional} from '../../Interfaces/professional.interface';
+import {SalonGeo} from '../../Interfaces/salon-geo.interface';
+import {Review} from '../../Interfaces/review.interface';
+import {Portfolio} from '../../Interfaces/portfolio.interface';
 
 @Component({
   selector: 'app-salon-details',
@@ -24,6 +25,8 @@ export class SalonDetailsComponent implements OnInit {
   paymentMethods = [];
   distance;
   locationReviews: Review = <Review>{};
+  salonData: SalonInfo;
+  portfolioImg = [];
 
   constructor(private salonDetailsService: SalonInfoService, private route: ActivatedRoute) {
   }
@@ -33,6 +36,8 @@ export class SalonDetailsComponent implements OnInit {
     this.salonId = parseInt((<any>this.route.snapshot.params).id);
     this.salonDetailsService.getSalonInfo(this.salonId)
       .subscribe((data: SalonInfo) => {
+        console.log(data);
+        this.salonData = data;
         this.salonName = data.name;
         this.address = data.address.streetNameAndNumber + ', ' + data.address.city;
         this.descriptionOfSalon = data.longDescription;
@@ -45,14 +50,15 @@ export class SalonDetailsComponent implements OnInit {
         this.professionalsBySalon = data;
       });
 
-    this.salonDetailsService.getAvailabilityHours(this.salonId)
+    this.salonDetailsService.getAvailabilityHours(12)
       .subscribe((data: AvailableHours) => {
         const arrDate = data.weekTimeFrame;
         arrDate.forEach((day) => {
           day.weekDay = day.weekDay.toLowerCase();
-          console.log(day.timeFrame.startTimeMS);
-          day.timeFrame.startTimeMS = new Date(day.timeFrame.startTimeMS).getHours();
-          day.timeFrame.endTimeMS = new Date(day.timeFrame.endTimeMS).getHours();
+          day.timeFrame.startTimeMS = new Date(day.timeFrame.startTimeMS).getHours() + ':' +
+            new Date(day.timeFrame.startTimeMS).getMinutes();
+          day.timeFrame.endTimeMS = new Date(day.timeFrame.endTimeMS).getHours() + ':' +
+            new Date(day.timeFrame.endTimeMS).getMinutes();
           if (day.weekDay === this.days[new Date().getDay()]) {
             day.targetDay = true;
           }
@@ -63,6 +69,11 @@ export class SalonDetailsComponent implements OnInit {
     this.salonDetailsService.getLocationReviews(this.salonId)
       .subscribe((data: Review) => {
         this.locationReviews = data;
+      });
+
+    this.salonDetailsService.getLocationPortfolio(this.salonId)
+      .subscribe((data: Portfolio) => {
+        this.portfolioImg = data.image;
       });
 
     this.getLocation();

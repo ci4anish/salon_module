@@ -20,7 +20,9 @@ export interface SalonInfo {
   id: number;
   longDescription: string;
   name: string;
-  openHours: {};
+  openHours: {
+    id: number;
+  };
   phone: {
     phone: string
   };
