@@ -1,4 +1,5 @@
 <!--<app-header></app-header>-->
+<app-slider [imageArr]="portfolioImg"></app-slider>
 <section class="salon_details text-center">
   <div class="container dis_flex">
     <div class="details_wrapper ">
@@ -12,8 +13,10 @@
         <div class="wrapper_beauticians-icons dis_flex">
           <div class="personal_icon" *ngFor="let professional of professionalsBySalon">
             <!--<img src="./994628-200.png" alt="{{professional}}">-->
-            <img src="../../../assets/unknown_icon.png" alt="" class="beauticians_icon">
-            <div>{{professional.id}}</div>
+            <img src="{{professional.professional.avatar.url}}"
+                 alt="{{professional.professional.avatar.altText}}"
+                 class="beauticians_icon">
+            <div></div>
           </div>
         </div>
       </div>
@@ -63,7 +66,7 @@
         <table class="table_calendar">
           <tr *ngFor="let day of weekTimeFrame" class="style_calendar" [class.focus_day]="day.targetDay">
             <td class="style_text">{{day.weekDay}}</td>
-            <td>{{day.timeFrame.startTimeMS}} -</td>
+            <td [class.close_day]="day.closeDay">{{day.timeFrame.startTimeMS}} -</td>
             <td>{{day.timeFrame.endTimeMS}}</td>
           </tr>
         </table>
@@ -89,11 +92,10 @@
 <app-comments></app-comments>
 <app-map></app-map>
 <app-footer></app-footer>
-<div *ngFor="let img of portfolioImg">
-  <img src="{{img.url}}" alt="{{img.altText}}">
+
+
+
+
+<div class="text-center">
+  <button mat-raised-button color="primary" style="margin: 30px 10px" routerLink="/book-module">book mock</button>
 </div>
-
-<app-date-picker></app-date-picker>
-
-<app-type-picker></app-type-picker>
-

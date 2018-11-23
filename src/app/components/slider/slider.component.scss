@@ -1,0 +1,66 @@
+h1{
+  min-height: 200px;
+  background-color: #ccc;
+  text-align: center;
+  line-height: 200px;
+}
+.leftRs {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  width: 50px;
+  height: 50px;
+  box-shadow: 1px 2px 10px -1px rgba(0, 0, 0, 0.3);
+  border-radius: 999px;
+  left: 0;
+  outline: none;
+  background-color: #000000;
+  font-size: 32px;
+  color: #fff;
+  border: none;
+}
+
+.rightRs {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  width: 50px;
+  height: 50px;
+  box-shadow: 1px 2px 10px -1px rgba(0, 0, 0, .3);
+  border-radius: 999px;
+  right: 0;
+  outline: none;
+  background-color: #000000;
+  font-size: 32px;
+  color: #fff;
+  border: none;
+}
+.tile {
+  height: 400px;
+  text-align: center;
+  position: relative;
+}
+::ng-deep ngu-tile {
+  padding: 0!important;
+}
+.wrapper_slider {
+  margin-bottom: 25px;
+  img {
+    max-width: 100%;
+    max-height: 100%;
+  }
+}
+.slider_link {
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  text-decoration: none;
+  font-size: 30px;
+  background-color: #000000;
+  padding: 10px 15px;
+  color: #fff;
+}

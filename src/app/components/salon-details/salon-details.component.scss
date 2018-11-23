@@ -7,6 +7,7 @@
   width: 50px;
   height: 50px;
   display: block;
+  border-radius: 25px;
 }
 .details_wrapper {
   width: 30%;
@@ -19,6 +20,7 @@
   flex-wrap: wrap;
   .personal_icon {
     text-align: center;
+    margin: 0 5px;
   }
 }
 .wrapper_social-icons {
@@ -84,4 +86,9 @@
 .wrapper_beauticians-icons {
   justify-content: center;
   width: 100%;
+}
+.close_day {
+  td {
+    row-span: 2;
+  }
 }

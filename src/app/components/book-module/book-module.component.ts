@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { BookModuleService } from '../../services/book-module.service';
-import { SalonInfoService } from '../../services/salon-info.service';
-import { ProfessionalInfoService } from '../../services/professional-info.service';
-import { Professional } from '../../Interfaces/professional.interface';
-import { combineLatest } from 'rxjs';
+import {Component, OnInit} from '@angular/core';
+import {BookModuleService} from '../../services/book-module.service';
+import {SalonInfoService} from '../../services/salon-info.service';
+import {ProfessionalInfoService} from '../../services/professional-info.service';
+import {Professional} from '../../Interfaces/professional.interface';
+import {combineLatest} from 'rxjs';
 
 
 @Component({
@@ -26,6 +26,11 @@ export class BookModuleComponent implements OnInit {
         console.log('Professionals', data);
       });
 
+    this.salonDetailsService.getServices2professional(3)
+      .subscribe(data => console.log('services2professionals', data));
+    this.salonDetailsService.getProfessionals2services(3)
+      .subscribe(data => console.log('professionals2services', data));
+
     combineLatest(
       this.salonDetailsService.getLocationGroupAll(3),
       this.salonDetailsService.getLocationServiceAll(3)
@@ -42,7 +47,7 @@ export class BookModuleComponent implements OnInit {
       console.log('Service Groups', this.serviceGroups);
 
       // get professionals by service
-      this.getProfessionalsByService(this.serviceGroups[0].services[0])
+      this.getProfessionalsByService(this.serviceGroups[0].services[0]);
     });
   }
 

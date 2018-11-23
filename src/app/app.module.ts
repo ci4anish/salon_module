@@ -32,6 +32,8 @@ import { CommentsComponent } from './components/comments/comments.component';
 import { TypePickerComponent } from './components/type-picker/type-picker.component';
 import { DatePickerComponent } from './components/date-picker/date-picker.component';
 import { BookModuleComponent } from './components/book-module/book-module.component';
+import {SliderComponent} from './components/slider/slider.component';
+import { NguCarouselModule } from '@ngu/carousel';
 
 @NgModule({
   declarations: [
@@ -48,6 +50,8 @@ import { BookModuleComponent } from './components/book-module/book-module.compon
     TypePickerComponent,
     DatePickerComponent,
     BookModuleComponent,
+    SliderComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -64,7 +68,8 @@ import { BookModuleComponent } from './components/book-module/book-module.compon
     MatNativeDateModule,
     MatInputModule,
     MatAutocompleteModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NguCarouselModule
   ],
   providers: [SalonInfoService, BookModuleService, ProfessionalInfoService],
   bootstrap: [AppComponent]

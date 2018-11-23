@@ -32,11 +32,9 @@ export class SalonDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
-
     this.salonId = parseInt((<any>this.route.snapshot.params).id);
     this.salonDetailsService.getSalonInfo(this.salonId)
       .subscribe((data: SalonInfo) => {
-        console.log(data);
         this.salonData = data;
         this.salonName = data.name;
         this.address = data.address.streetNameAndNumber + ', ' + data.address.city;
@@ -55,10 +53,16 @@ export class SalonDetailsComponent implements OnInit {
         const arrDate = data.weekTimeFrame;
         arrDate.forEach((day) => {
           day.weekDay = day.weekDay.toLowerCase();
-          day.timeFrame.startTimeMS = new Date(day.timeFrame.startTimeMS).getHours() + ':' +
-            new Date(day.timeFrame.startTimeMS).getMinutes();
-          day.timeFrame.endTimeMS = new Date(day.timeFrame.endTimeMS).getHours() + ':' +
-            new Date(day.timeFrame.endTimeMS).getMinutes();
+          if (day.timeFrame.startTimeMS === day.timeFrame.endTimeMS) {
+            day.timeFrame.startTimeMS = 'Closed';
+            day.timeFrame.endTimeMS = undefined;
+            day.closeDay = true;
+          } else {
+            day.timeFrame.startTimeMS = new Date(day.timeFrame.startTimeMS).getHours() + ':' +
+              new Date(day.timeFrame.startTimeMS).getMinutes();
+            day.timeFrame.endTimeMS = new Date(day.timeFrame.endTimeMS).getHours() + ':' +
+              new Date(day.timeFrame.endTimeMS).getMinutes();
+          }
           if (day.weekDay === this.days[new Date().getDay()]) {
             day.targetDay = true;
           }

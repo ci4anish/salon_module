@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { SalonGeo } from '../Interfaces/salon-geo.interface';
-import { Observable } from 'rxjs';
-import { AvailableHours } from '../Interfaces/available-hours.interface';
-import { Professional } from '../Interfaces/professional.interface';
-import { apiUrl } from '../constants/app.constants';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {SalonGeo} from '../Interfaces/salon-geo.interface';
+import {Observable} from 'rxjs';
+import {AvailableHours} from '../Interfaces/available-hours.interface';
+import {Professional} from '../Interfaces/professional.interface';
+import {apiUrl} from '../constants/app.constants';
 
 @Injectable({
   providedIn: 'root'
@@ -57,6 +57,14 @@ export class SalonInfoService {
   }
 
   getLocationPortfolio(salonId: number) {
-    return this.http.get(this.url + 'location/' + salonId + '/portfolio')
+    return this.http.get(this.url + 'location/' + salonId + '/portfolio');
+  }
+
+  getServices2professional(salonId: number) {
+    return this.http.get(this.url + 'location/' + salonId + '/services2professionals');
+  }
+
+  getProfessionals2services(salonId: number) {
+    return this.http.get(this.url + 'location/' + salonId + '/professionals2Services');
   }
 }
