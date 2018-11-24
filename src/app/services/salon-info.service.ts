@@ -20,7 +20,7 @@ export class SalonInfoService {
   }
 
 
-  getProfessionalsBySalon(salonId: number): Observable<Professional> {
+  getSalonProfessionals(salonId: number): Observable<Professional> {
     return this.http.get<Professional>(this.url + 'location/' + salonId + '/professionals ');
   }
 
@@ -65,6 +65,6 @@ export class SalonInfoService {
   }
 
   getProfessionals2services(salonId: number) {
-    return this.http.get(this.url + 'location/' + salonId + '/professionals2Services');
+    return this.http.get(this.url + 'location/' + salonId + '/professionals2services');
   }
 }

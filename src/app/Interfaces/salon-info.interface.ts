@@ -28,11 +28,14 @@ export interface SalonInfo {
   };
   professionalLinks: [{}];
   properties: {
+    amenities: string[];
     dynamicLocationType: null;
     locationType: string;
-    paymentMethods: [{
+    mainLanguage: string;
+    otherLanguages: string[];
+    paymentMethods: {
       method: string;
-    }];
+    }[];
     physicalLocationType: string;
   };
   reviews: [{}];

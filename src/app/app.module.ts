@@ -4,7 +4,6 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { SalonInfoService } from './services/salon-info.service';
 import { BookModuleService } from './services/book-module.service';
-import { ProfessionalInfoService } from './services/professional-info.service';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SalonDetailsComponent } from './components/salon-details/salon-details.component';
@@ -22,7 +21,7 @@ import {
   MatNativeDateModule,
   MatRadioButton,
   MatRadioGroup,
-  MatRippleModule
+  MatRippleModule, MatSelectModule
 } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MapComponent } from './components/map/map.component';
@@ -34,6 +33,7 @@ import { DatePickerComponent } from './components/date-picker/date-picker.compon
 import { BookModuleComponent } from './components/book-module/book-module.component';
 import {SliderComponent} from './components/slider/slider.component';
 import { NguCarouselModule } from '@ngu/carousel';
+import { SelectBeauticianComponent } from './components/select-beautician/select-beautician.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +51,7 @@ import { NguCarouselModule } from '@ngu/carousel';
     DatePickerComponent,
     BookModuleComponent,
     SliderComponent,
+    SelectBeauticianComponent,
 
   ],
   imports: [
@@ -69,9 +70,10 @@ import { NguCarouselModule } from '@ngu/carousel';
     MatInputModule,
     MatAutocompleteModule,
     ReactiveFormsModule,
-    NguCarouselModule
+    NguCarouselModule,
+    MatSelectModule
   ],
-  providers: [SalonInfoService, BookModuleService, ProfessionalInfoService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule {

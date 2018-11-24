@@ -47,6 +47,7 @@ h1{
 }
 .wrapper_slider {
   margin-bottom: 25px;
+  position: relative;
   img {
     max-width: 100%;
     max-height: 100%;
@@ -63,4 +64,5 @@ h1{
   background-color: #000000;
   padding: 10px 15px;
   color: #fff;
+  z-index: 2;
 }

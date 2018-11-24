@@ -27,6 +27,7 @@ export class SalonDetailsComponent implements OnInit {
   locationReviews: Review = <Review>{};
   salonData: SalonInfo;
   portfolioImg = [];
+  languages = <any>[];
 
   constructor(private salonDetailsService: SalonInfoService, private route: ActivatedRoute) {
   }
@@ -41,9 +42,11 @@ export class SalonDetailsComponent implements OnInit {
         this.descriptionOfSalon = data.longDescription;
         this.phoneNumber = data.phone.phone;
         this.paymentMethods = data.properties.paymentMethods;
+        this.languages = data.properties.otherLanguages;
+        this.languages.unshift(data.properties.mainLanguage);
       });
 
-    this.salonDetailsService.getProfessionalsBySalon(this.salonId)
+    this.salonDetailsService.getSalonProfessionals(this.salonId)
       .subscribe((data: Professional) => {
         this.professionalsBySalon = data;
       });

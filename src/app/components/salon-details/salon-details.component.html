@@ -16,17 +16,17 @@
             <img src="{{professional.professional.avatar.url}}"
                  alt="{{professional.professional.avatar.altText}}"
                  class="beauticians_icon">
-            <div></div>
+            <div class="avatar_bg" ></div>
           </div>
         </div>
       </div>
 
       <div class="wrapper_language text-center">
         <h3>we speak</h3>
-        <div class="wrapper_lang dis_flex">
-          <div class="lang_en">EN</div>
-          <div class="lang_it">IT</div>
-          <div class="lang_es">ES</div>
+        <div class="dis_flex wrapper_lang">
+          <div class="dis_flex" *ngFor="let language of languages">
+            <div class="lang">{{language}}</div>
+          </div>
         </div>
       </div>
     </div>
@@ -94,8 +94,3 @@
 <app-footer></app-footer>
 
 
-
-
-<div class="text-center">
-  <button mat-raised-button color="primary" style="margin: 30px 10px" routerLink="/book-module">book mock</button>
-</div>
