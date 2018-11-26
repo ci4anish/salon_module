@@ -9,6 +9,7 @@ import {NguCarouselConfig} from '@ngu/carousel';
 })
 export class SliderComponent {
   @Input() imageArr;
+  @Input() salonId;
   name = 'Angular';
   slideNo = 0;
   withAnimation = true;

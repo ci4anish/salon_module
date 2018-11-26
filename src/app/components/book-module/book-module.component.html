@@ -26,7 +26,7 @@
           {{selectedService.service.minutes}} min
         </div>
         <div class="service_booking dis_flex">
-          <button mat-button (click)="removeSelect(selectedService)">
+          <button mat-button (click)="clearSelected()">
             <i class="material-icons">
               clear
             </i>
@@ -48,7 +48,7 @@
             {{service.service.minutes}} min
           </div>
           <div class="service_booking dis_flex">
-            <button mat-button (click)="selectService(service, group.services)" [disabled]="selectedService">
+            <button mat-button (click)="selectService(service, group)" [disabled]="selectedService">
               <i class="material-icons">
                 add
               </i>

@@ -1,11 +1,10 @@
 import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 import {BookModuleService} from '../../services/book-module.service';
 import {SalonInfoService} from '../../services/salon-info.service';
 import {combineLatest} from 'rxjs';
 import {SalonInfo} from '../../Interfaces/salon-info.interface';
 import {Professional} from '../../Interfaces/professional.interface';
-import {group} from '@angular/animations';
-
 
 @Component({
   selector: 'app-book-module',
@@ -13,7 +12,6 @@ import {group} from '@angular/animations';
   styleUrls: ['./book-module.component.scss']
 })
 export class BookModuleComponent implements OnInit {
-
   public displayedServiceGroups;
   public displayedProfessionals;
   public selectedService;
@@ -28,25 +26,28 @@ export class BookModuleComponent implements OnInit {
   private serviceGroups;
   private salonProfessionals = <any>[];
   private salonServices = <any>[];
-  private group;
-  private index;
+  private selectedServiceGroup;
+  private selectedServiceIndex;
+  private salonId: number;
 
   constructor(private bookModuleService: BookModuleService,
+              private route: ActivatedRoute,
               private salonDetailsService: SalonInfoService) {
   }
 
   ngOnInit() {
-    this.salonDetailsService.getSalonInfo(3)
+    this.salonId = +this.route.snapshot.queryParams.salonId;
+    this.salonDetailsService.getSalonInfo(this.salonId)
       .subscribe((data: SalonInfo) => {
         this.salonName = data.name;
         this.salonAvatar = data.avatar;
       });
     combineLatest(
-      this.salonDetailsService.getLocationGroupAll(3),
-      this.salonDetailsService.getLocationServiceAll(3),
-      this.salonDetailsService.getSalonProfessionals(3),
-      this.salonDetailsService.getServices2professional(3),
-      this.salonDetailsService.getProfessionals2services(3),
+      this.salonDetailsService.getLocationGroupAll(this.salonId),
+      this.salonDetailsService.getLocationServiceAll(this.salonId),
+      this.salonDetailsService.getSalonProfessionals(this.salonId),
+      this.salonDetailsService.getServices2professional(this.salonId),
+      this.salonDetailsService.getProfessionals2services(this.salonId),
     ).subscribe(data => {
       this.serviceGroups = data[0];
       this.salonServices = data[1];
@@ -72,10 +73,29 @@ export class BookModuleComponent implements OnInit {
       });
       this.getDisplayedServicesGroups(this.salonServices);
       this.getDisplayedProfessionals();
+
+      const selectedServiceId = +this.route.snapshot.queryParams.serviceId;
+      if (selectedServiceId) {
+        this.findAndSelectService(selectedServiceId);
+      }
     });
     // this.salonDetailsService.getAvailableHoursByProfessional(4)
     //   .subscribe( data => console.log(data));
     // problem with JSON object ? have mistake
+  }
+
+  findAndSelectService(selectedServiceId: number) {
+    for (let i = 0; i < this.displayedServiceGroups.length; i++) {
+      const groupItem = this.displayedServiceGroups[i];
+
+      for (let j = 0; j < groupItem.services.length; j++) {
+        const service = groupItem.services[j];
+        if (selectedServiceId === service.service.id) {
+          this.selectService(service, groupItem);
+          return;
+        }
+      }
+    }
   }
 
   getDisplayedServicesGroups(currentServices) {
@@ -86,7 +106,7 @@ export class BookModuleComponent implements OnInit {
 
       servicesIds.forEach(serviceId => {
         const service = currentServices.find(s => s.service.id === serviceId.id);
-        if (service) {
+        if (service && (!this.selectedService || service.service.id !== this.selectedService.service.id)) {
           group.services.push(service);
         }
       });
@@ -95,7 +115,6 @@ export class BookModuleComponent implements OnInit {
 
   getDisplayedProfessionals() {
     this.displayedProfessionals = JSON.parse(JSON.stringify(this.salonProfessionals));
-    // this.selectedProfessionalId = this.displayedProfessionals[0].id;
   }
 
   selectProfessional(professionalId?) {
@@ -114,18 +133,18 @@ export class BookModuleComponent implements OnInit {
     }
   }
 
-  selectService(service: any, groupServices: any) {
+  selectService(service: any, group: any) {
     this.selectedService = service;
-    this.index = groupServices.indexOf(service);
-    groupServices.splice(this.index, 1);
-    this.group = groupServices;
+    this.selectedServiceIndex = group.services.indexOf(service);
+    group.services.splice(this.selectedServiceIndex, 1);
+    this.selectedServiceGroup = group;
     this.displayedProfessionals = this.services2professionalMap.get(service.id);
   }
 
-  removeSelect(service) {
-    this.group.splice(this.index, 0, service);
+  clearSelected() {
+    const group = this.displayedServiceGroups.find(g => g.id === this.selectedServiceGroup.id);
+    group.services.splice(this.selectedServiceIndex, 0, this.selectedService);
     this.selectedService = undefined;
     this.displayedProfessionals = JSON.parse(JSON.stringify(this.salonProfessionals));
   }
-
 }

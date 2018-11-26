@@ -1,5 +1,5 @@
 <div class="wrapper_slider">
-  <a href="#" class="slider_link" routerLink="/book-module">Book now</a>
+  <a href="#" class="slider_link" routerLink="/book-module" [queryParams]="{salonId: salonId}">Book now</a>
   <ngu-carousel #myCarousel [inputs]="carouselConfig" [dataSource]="imageArr">
     <ngu-tile *nguCarouselDef="let item;" >
       <div class="tile" >
