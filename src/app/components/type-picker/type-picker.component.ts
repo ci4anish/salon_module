@@ -1,8 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import {FormControl} from '@angular/forms';
+import {Component, Input, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
+import {startWith, map} from 'rxjs/operators';
 
+export interface StateGroup {
+  letter: string;
+  names: string[];
+}
+
+export const _filter = (opt: string[], value: string): string[] => {
+  const filterValue = value.toLowerCase();
+
+  return opt.filter(item => item.toLowerCase().indexOf(filterValue) === 0);
+};
 
 @Component({
   selector: 'app-type-picker',
@@ -10,22 +20,36 @@ import {map, startWith} from 'rxjs/operators';
   styleUrls: ['./type-picker.component.scss']
 })
 export class TypePickerComponent implements OnInit {
-  myControl = new FormControl();
-  options: string[] = ['One', 'Two', 'Three'];
-  filteredOptions: Observable<string[]>;
+  @Input() salonServices ;
+  stateForm: FormGroup = this.fb.group({
+    treatment: '',
+  });
+
+  stateGroups: StateGroup[] = [{
+    letter: 'W',
+    names: ['Washington', 'West Virginia', 'Wisconsin', 'Wyoming']
+  }];
+
+  stateGroupOptions: Observable<StateGroup[]>;
+
+  constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
-    this.filteredOptions = this.myControl.valueChanges
+    this.stateGroupOptions = this.stateForm.get('treatment')!.valueChanges
       .pipe(
         startWith(''),
-        map(value => this._filter(value))
+        map(value => this._filterGroup(value))
       );
   }
 
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
+  private _filterGroup(value: string): StateGroup[] {
+    if (value) {
+      return this.stateGroups
+        .map(group => ({letter: group.letter, names: _filter(group.names, value)}))
+        .filter(group => group.names.length > 0);
+    }
 
-    return this.options.filter(option => option.toLowerCase().includes(filterValue));
+    return this.stateGroups;
   }
 
 }

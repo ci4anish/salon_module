@@ -1,5 +1,5 @@
-import {Component, AfterViewInit, ViewChild, ChangeDetectorRef, Input, OnInit} from '@angular/core';
-import {NguCarousel, NguCarouselConfig} from '@ngu/carousel';
+import {Component, ViewChild, Input} from '@angular/core';
+import {NguCarouselConfig} from '@ngu/carousel';
 
 
 @Component({
@@ -7,12 +7,12 @@ import {NguCarousel, NguCarouselConfig} from '@ngu/carousel';
   templateUrl: './slider.component.html',
   styleUrls: ['./slider.component.scss']
 })
-export class SliderComponent implements AfterViewInit {
+export class SliderComponent {
   @Input() imageArr;
   name = 'Angular';
   slideNo = 0;
-  withAnim = true;
-  resetAnim = true;
+  withAnimation = true;
+  resetAnimation = true;
 
   @ViewChild('myCarousel') myCarousel;
   carouselConfig: NguCarouselConfig = {
@@ -28,21 +28,14 @@ export class SliderComponent implements AfterViewInit {
     }
   };
 
-  constructor(private cdr: ChangeDetectorRef) {
-  }
-
-
-
-  ngAfterViewInit() {
-    this.cdr.detectChanges();
+  constructor() {
   }
 
   reset() {
-    this.myCarousel.reset(!this.resetAnim);
+    this.myCarousel.reset(!this.resetAnimation);
   }
 
   moveTo(slide) {
-    this.myCarousel.moveTo(slide, !this.withAnim);
+    this.myCarousel.moveTo(slide, !this.withAnimation);
   }
-
 }

@@ -18,7 +18,6 @@ export class MapComponent implements OnInit {
       this.salonGeoDeg = data.deg;
       this.initMap();
     });
-
   }
 
   initMap() {
@@ -30,5 +29,4 @@ export class MapComponent implements OnInit {
     this.map.addLayer(osm);
     const marker = (<any>window).L.marker([this.salonGeoDeg.latitude, this.salonGeoDeg.longitude]).addTo(this.map);
   }
-
 }

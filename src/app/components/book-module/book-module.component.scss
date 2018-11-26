@@ -1,8 +1,74 @@
-.wrapper_professional-info , .wrapper_total-bookInfo{
+.wrapper_professional-info , .wrapper_total-bookInfo {
   width: 25%;
-  height: 100vh;
+  height: 90vh;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.45);
+  padding: 10px 25px;
 }
 .wrapper_services-selected {
   width: 50%;
-  height: 100vh;
+  height: 90vh;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.45);
+  padding: 10px 25px;
+}
+.wrapper_total-bookInfo {
+  padding: 10px 25px;
+}
+.service_wrapper {
+  padding: 5px 10px;
+}
+.wrapper_select_item {
+  min-height: 100px;
+
+}
+h3 {
+  border-bottom: 1px solid gray;
+}
+.service_title {
+  width: 50%;
+  align-items: center;
+}
+.service_price, .service_duration , .service_booking{
+  width: 10%;
+  align-items: center;
+}
+.professional_logo {
+  flex-wrap: wrap;
+  width: 50px;
+  height: 50px;
+  margin: 0 auto;
+  img {
+    max-width: 100%;
+    border-radius: 50%;
+  }
+}
+.job_content {
+  width: 80%;
+  margin: 0 auto;
+  padding-top: 40px;
+
+}
+//.job_title {
+//  width: 80%;
+//}
+.info {
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: space-between;
+  border-top: 1px solid gray;
+}
+.wrapper_book_now {
+  flex-wrap: wrap;
+  margin-top: 250px;
+}
+.book_now-btn {
+  border-top: 1px solid gray;
+}
+
+.wrapper_book_now {
+  width: 100%;
+  justify-content: space-between;
+}
+.book_now-btn{
+  width: 100%;
+  padding-top: 25px;
 }

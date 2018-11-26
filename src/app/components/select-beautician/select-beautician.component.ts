@@ -1,16 +1,24 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
   selector: 'app-select-beautician',
   templateUrl: './select-beautician.component.html',
   styleUrls: ['./select-beautician.component.scss']
 })
-export class SelectBeauticianComponent implements OnInit {
+export class SelectBeauticianComponent {
+  @Input() professionals;
+  @Output() selectProfessional: EventEmitter<number> = new EventEmitter();
+  @Input() selectedId;
+
   constructor() {
   }
-  @Input() beauticians;
 
-  ngOnInit() {
+  onSelect($event) {
+    this.selectProfessional.emit($event.value);
   }
 
+  clearInput() {
+    this.selectedId = undefined;
+    this.selectProfessional.emit(undefined);
+  }
 }

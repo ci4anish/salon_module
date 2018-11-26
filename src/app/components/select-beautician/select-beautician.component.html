@@ -1,8 +1,10 @@
 <mat-form-field>
-  <mat-select placeholder="Favorite food">
-    <mat-option *ngFor="let masters of beauticians" [value]="masters.name">
-      {{masters.name}}
+  <mat-select placeholder="Choice the professional" [(ngModel)]="selectedId" (selectionChange)="onSelect($event)">
+    <mat-option *ngFor="let professional of professionals" [value]="professional.id">
+      {{professional.professional.user.person.firstName}}
     </mat-option>
   </mat-select>
 </mat-form-field>
+<button mat-button (click)="clearInput()" [disabled]="!selectedId"> <i class="material-icons"> clear </i></button>
+
 

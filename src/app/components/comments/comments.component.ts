@@ -26,5 +26,4 @@ export class CommentsComponent implements OnInit {
         this.starRating = data.averageOverall;
       });
   }
-
 }

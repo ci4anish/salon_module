@@ -7,6 +7,7 @@ import {Professional} from '../../Interfaces/professional.interface';
 import {SalonGeo} from '../../Interfaces/salon-geo.interface';
 import {Review} from '../../Interfaces/review.interface';
 import {Portfolio} from '../../Interfaces/portfolio.interface';
+import {amenities, payments, socialLinks} from '../../constants';
 
 @Component({
   selector: 'app-salon-details',
@@ -14,6 +15,7 @@ import {Portfolio} from '../../Interfaces/portfolio.interface';
   styleUrls: ['./salon-details.component.scss']
 })
 export class SalonDetailsComponent implements OnInit {
+
   salonName: string;
   address;
   descriptionOfSalon: string;
@@ -23,19 +25,26 @@ export class SalonDetailsComponent implements OnInit {
   weekTimeFrame;
   days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
   paymentMethods = [];
-  distance;
+  distance: string;
   locationReviews: Review = <Review>{};
   salonData: SalonInfo;
   portfolioImg = [];
   languages = <any>[];
+  salonAmenities;
+  salonSocialLinks;
+  amenities = amenities;
+  socialLinks = socialLinks;
+  payments = payments;
+  salonAvatar;
 
   constructor(private salonDetailsService: SalonInfoService, private route: ActivatedRoute) {
   }
 
   ngOnInit() {
-    this.salonId = parseInt((<any>this.route.snapshot.params).id);
+    this.salonId = parseInt((<any>this.route.snapshot.params).id, 10);
     this.salonDetailsService.getSalonInfo(this.salonId)
       .subscribe((data: SalonInfo) => {
+        this.salonAvatar = data.avatar;
         this.salonData = data;
         this.salonName = data.name;
         this.address = data.address.streetNameAndNumber + ', ' + data.address.city;
@@ -44,6 +53,10 @@ export class SalonDetailsComponent implements OnInit {
         this.paymentMethods = data.properties.paymentMethods;
         this.languages = data.properties.otherLanguages;
         this.languages.unshift(data.properties.mainLanguage);
+        this.salonSocialLinks = data.socialMediaLinks;
+        this.salonAmenities = data.properties.amenities.map(amenity => {
+          return amenity.toLowerCase().replace(/_/g, ' ');
+        });
       });
 
     this.salonDetailsService.getSalonProfessionals(this.salonId)
@@ -61,10 +74,12 @@ export class SalonDetailsComponent implements OnInit {
             day.timeFrame.endTimeMS = undefined;
             day.closeDay = true;
           } else {
-            day.timeFrame.startTimeMS = new Date(day.timeFrame.startTimeMS).getHours() + ':' +
-              new Date(day.timeFrame.startTimeMS).getMinutes();
-            day.timeFrame.endTimeMS = new Date(day.timeFrame.endTimeMS).getHours() + ':' +
-              new Date(day.timeFrame.endTimeMS).getMinutes();
+            day.timeFrame.startTimeMS =
+              this.convertTime(new Date(day.timeFrame.startTimeMS).getHours().toString()) + ':' +
+              this.convertTime(new Date(day.timeFrame.startTimeMS).getMinutes().toString()) + ' - ';
+            day.timeFrame.endTimeMS =
+              this.convertTime(new Date(day.timeFrame.endTimeMS).getHours().toString()) + ':' +
+              this.convertTime(new Date(day.timeFrame.endTimeMS).getMinutes().toString());
           }
           if (day.weekDay === this.days[new Date().getDay()]) {
             day.targetDay = true;
@@ -86,6 +101,10 @@ export class SalonDetailsComponent implements OnInit {
     this.getLocation();
   }
 
+  private convertTime(time: string): string {
+    return time.length > 1 ? time : '0' + time;
+  }
+
   private getLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(position => {
@@ -105,7 +124,7 @@ export class SalonDetailsComponent implements OnInit {
     }
   }
 
-  private calcDistance(lat1, lon1, lat2, lon2, unit): number {
+  private calcDistance(lat1: number, lon1: number, lat2: number, lon2: number, unit: string): number {
     if ((lat1 === lat2) && (lon1 === lon2)) {
       return 0;
     } else {

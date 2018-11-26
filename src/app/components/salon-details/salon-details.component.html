@@ -1,18 +1,19 @@
-<!--<app-header></app-header>-->
+<app-header [salonAvatar]="salonAvatar"></app-header>
 <app-slider [imageArr]="portfolioImg"></app-slider>
 <section class="salon_details text-center">
   <div class="container dis_flex">
     <div class="details_wrapper ">
-      <div class="wrappper_icons">
-        <div class="wrapper_social-icons ">
-          <i class="far fa-heart"></i>
-          <i class="far fa-comments"></i>
-          <i class="fab fa-facebook-f"></i>
+      <div class="wrappper_icons " >
+        <div class="wrapper_social-icons dis_flex" >
+          <div *ngFor="let link of salonSocialLinks">
+            <a href="{{link.url}}" target="_blank">
+              <i [ngClass]="socialLinks[link.id]"></i>
+            </a>
+          </div>
         </div>
         <h3 class="beauticians_title text-center">Meet our beauticians</h3>
         <div class="wrapper_beauticians-icons dis_flex">
           <div class="personal_icon" *ngFor="let professional of professionalsBySalon">
-            <!--<img src="./994628-200.png" alt="{{professional}}">-->
             <img src="{{professional.professional.avatar.url}}"
                  alt="{{professional.professional.avatar.altText}}"
                  class="beauticians_icon">
@@ -38,22 +39,14 @@
         <div class="payments_items dis_flex" >
           <p class="title_payments">Payments</p>
           <div *ngFor="let item of paymentMethods">
-            <div *ngIf="item.method == 'CASH' ">
-              <i class="fas fa-wallet"></i>
-            </div>
-            <div *ngIf="item.method == 'CARD' ">
-              <i class="far fa-credit-card"></i>
-            </div>
-            <div *ngIf="item.method == 'VOUCHER' ">
-              <i class="fas fa-file-invoice-dollar"></i>
-            </div>
+          <div>
+            <i [ngClass]="payments[item.method]"></i>
+          </div>
           </div>
         </div>
-        <div class="payments_other">
-          <p>other</p>
-          <i class="material-icons">
-            wifi
-          </i>
+        <div class="payments_other" *ngFor="let amenity of salonAmenities">
+          <p>{{amenity}}</p>
+          <i [ngClass]="amenities[amenity]"></i>
         </div>
       </div>
     </div>
@@ -63,13 +56,13 @@
       </app-star-rating>
       <div class="business_hours">
         <p>Business hours</p>
-        <table class="table_calendar">
-          <tr *ngFor="let day of weekTimeFrame" class="style_calendar" [class.focus_day]="day.targetDay">
-            <td class="style_text">{{day.weekDay}}</td>
-            <td [class.close_day]="day.closeDay">{{day.timeFrame.startTimeMS}} -</td>
-            <td>{{day.timeFrame.endTimeMS}}</td>
-          </tr>
-        </table>
+        <div class="table_calendar">
+          <div *ngFor="let day of weekTimeFrame" class="style_calendar" [class.focus_day]="day.targetDay">
+            <div class="style_text">{{day.weekDay}}</div>
+            <div [class.close_day]="day.closeDay">
+              {{day.timeFrame.startTimeMS}} {{day.timeFrame.endTimeMS}}</div>
+          </div>
+        </div>
       </div>
 
       <div class="contact_info ">
@@ -88,7 +81,6 @@
   </div>
 </section>
 <app-salon-services></app-salon-services>
-
 <app-comments></app-comments>
 <app-map></app-map>
 <app-footer></app-footer>

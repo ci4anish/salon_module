@@ -15,7 +15,7 @@ export class SalonServicesComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.salonId = parseInt((<any>this.route.snapshot.params).id);
+    this.salonId = parseInt((<any>this.route.snapshot.params).id, 10);
 
     combineLatest(
       this.salonDetailsService.getLocationGroupAll(this.salonId),
