@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {SalonGeo} from '../Interfaces/salon-geo.interface';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {AvailableHours} from '../Interfaces/available-hours.interface';
 import {Professional} from '../Interfaces/professional.interface';
-import {apiUrl} from '../constants';
+import {apiUrl, time} from '../constants';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +24,8 @@ export class SalonInfoService {
   }
 
   getAvailableHoursByProfessional(id: number) {
-    return this.http.get(this.url + 'schedule/professional/1/yymmdd/181123/timezone/Europe-London/merged');
+    // return this.http.get(this.url + 'schedule/professional/1/yymmdd/181123/timezone/Europe-London/merged');
+    return of(time);
   }
 
   // getAdminsBySalon(salon: number): any {

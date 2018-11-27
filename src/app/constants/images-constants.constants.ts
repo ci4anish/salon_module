@@ -15,3 +15,4 @@ export const payments = {
   'CARD': 'far fa-credit-card',
   'VOUCHER': 'fas fa-file-invoice-dollar'
 };
+

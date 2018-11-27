@@ -28,7 +28,6 @@ import { MapComponent } from './components/map/map.component';
 import { StarRatingComponent } from './components/star-rating/star-rating.component';
 import { BarRatingModule } from 'ngx-bar-rating';
 import { CommentsComponent } from './components/comments/comments.component';
-import { TypePickerComponent } from './components/type-picker/type-picker.component';
 import { DatePickerComponent } from './components/date-picker/date-picker.component';
 import { BookModuleComponent } from './components/book-module/book-module.component';
 import {SliderComponent} from './components/slider/slider.component';
@@ -47,7 +46,6 @@ import { SelectBeauticianComponent } from './components/select-beautician/select
     MapComponent,
     StarRatingComponent,
     CommentsComponent,
-    TypePickerComponent,
     DatePickerComponent,
     BookModuleComponent,
     SliderComponent,

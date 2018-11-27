@@ -2,9 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {BookModuleService} from '../../services/book-module.service';
 import {SalonInfoService} from '../../services/salon-info.service';
-import {combineLatest} from 'rxjs';
+import {combineLatest, Observable} from 'rxjs';
 import {SalonInfo} from '../../Interfaces/salon-info.interface';
 import {Professional} from '../../Interfaces/professional.interface';
+import {map, startWith} from 'rxjs/internal/operators';
+import {FormControl} from '@angular/forms';
 
 @Component({
   selector: 'app-book-module',
@@ -20,6 +22,7 @@ export class BookModuleComponent implements OnInit {
   public selectedProfessionalProfile: Professional;
   public availableHours;
   public salonAvatar;
+  public professionalHours;
 
   private professionals2ServiceMap: Map<number, [{}]> = new Map();
   private services2professionalMap: Map<number, [{}]> = new Map();
@@ -29,6 +32,9 @@ export class BookModuleComponent implements OnInit {
   private selectedServiceGroup;
   private selectedServiceIndex;
   private salonId: number;
+  filterControl = new FormControl();
+  options: string[] = [];
+  filteredOptions: Observable<string[]>;
 
   constructor(private bookModuleService: BookModuleService,
               private route: ActivatedRoute,
@@ -73,12 +79,16 @@ export class BookModuleComponent implements OnInit {
       });
       this.getDisplayedServicesGroups(this.salonServices);
       this.getDisplayedProfessionals();
+      this.getTreatmentOptions(this.salonServices);
+
 
       const selectedServiceId = +this.route.snapshot.queryParams.serviceId;
       if (selectedServiceId) {
         this.findAndSelectService(selectedServiceId);
       }
     });
+
+
     // this.salonDetailsService.getAvailableHoursByProfessional(4)
     //   .subscribe( data => console.log(data));
     // problem with JSON object ? have mistake
@@ -123,12 +133,15 @@ export class BookModuleComponent implements OnInit {
       this.salonProfessionals.forEach(professional => {
         if (professional.id === professionalId) {
           this.selectedProfessionalProfile = professional;
-          console.log(professional);
+          this.salonDetailsService.getAvailableHoursByProfessional(professional.id)
+            .subscribe(data => this.professionalHours = data);
         }
       });
       this.getDisplayedServicesGroups(masterServices);
+      this.getTreatmentOptions(masterServices);
     } else {
       this.getDisplayedServicesGroups(this.salonServices);
+      this.getTreatmentOptions(this.salonServices);
       this.selectedProfessionalProfile = undefined;
     }
   }
@@ -146,5 +159,23 @@ export class BookModuleComponent implements OnInit {
     group.services.splice(this.selectedServiceIndex, 0, this.selectedService);
     this.selectedService = undefined;
     this.displayedProfessionals = JSON.parse(JSON.stringify(this.salonProfessionals));
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.options.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
+  getTreatmentOptions(services) {
+    this.options = [];
+    services.forEach(service => {
+      this.options.push(service.service.name);
+    });
+    this.filteredOptions = this.filterControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
   }
 }

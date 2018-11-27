@@ -5,7 +5,7 @@
                            [selectedId]="selectedProfessionalId"
                            (selectProfessional)="selectProfessional($event)"></app-select-beautician>
 
-    <div class="available_hours" *ngIf="availableHours">
+    <div class="available_hours" *ngIf="selectedProfessionalProfile">
       <div class="hours_title">
         <h3>Select hour</h3>
       </div>
@@ -58,7 +58,16 @@
       </div>
     </div>
 
-    <!--<app-type-picker [salonServices]="salonServices"></app-type-picker>-->
+    <form class="example-form">
+      <mat-form-field class="example-full-width">
+        <input type="text" placeholder="Pick one" aria-label="Number" matInput [formControl]="filterControl" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </form>
   </div>
   <div class="wrapper_total-bookInfo">
     <h2 class="text-center">{{salonName}}</h2>
