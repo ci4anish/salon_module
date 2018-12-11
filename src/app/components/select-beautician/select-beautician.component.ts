@@ -5,7 +5,7 @@ import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
   templateUrl: './select-beautician.component.html',
   styleUrls: ['./select-beautician.component.scss']
 })
-export class SelectBeauticianComponent  {
+export class SelectBeauticianComponent implements OnChanges {
   @Input() professionals;
   @Output() selectProfessional: EventEmitter<number> = new EventEmitter();
   @Input() selectedId;
@@ -13,12 +13,15 @@ export class SelectBeauticianComponent  {
   constructor() {
   }
 
+  ngOnChanges(changes) {
+    console.log(changes);
+  }
+
   onSelect($event) {
     this.selectProfessional.emit($event.value);
   }
 
   clearInput() {
-    this.selectedId = undefined;
     this.selectProfessional.emit(undefined);
   }
 

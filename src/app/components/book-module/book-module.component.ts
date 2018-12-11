@@ -158,6 +158,7 @@ export class BookModuleComponent implements OnInit {
     } else {
       this.getDisplayedServicesGroups(this.salonServices);
       this.selectedProfessionalProfile = undefined;
+      this.selectedProfessionalId = undefined;
       this.professionalHours = [];
     }
   }
@@ -181,7 +182,6 @@ export class BookModuleComponent implements OnInit {
     this.selectedDateFromUser = undefined;
     this.selectedslotTime = undefined;
     this.selectedDay = '';
-
   }
 
   private sortServicesByTreatment(value: string) {
@@ -309,8 +309,8 @@ export class BookModuleComponent implements OnInit {
         status: 'PENDING',
         type: 'BOOKING',
         schedule: {
-          // id: this.selectedProfessionalProfile.professional.id
-          id: 4
+          id: this.selectedProfessionalProfile.professional.id
+          // id: 4
         },
         creator: {
           id: 1
@@ -341,6 +341,7 @@ export class BookModuleComponent implements OnInit {
           this.selectProfessional(undefined);
           this.selectedProfessionalId = undefined;
           this.selectedDay = '';
+          this.getDisplayedProfessionals();
         });
     }
 
