@@ -4,7 +4,7 @@ export interface Professional {
   numberOfServices: number;
   policy: { id: number };
   professional: {
-    avatar: { id: number };
+    avatar: { id: number , url: string};
     enabled: boolean;
     groups: [{}];
     id: number;
@@ -26,6 +26,9 @@ export interface Professional {
       validated: boolean;
       acceptsNewsletter: boolean;
       id: number;
+      person: {
+        firstName: string;
+      }
     };
     vouchers: [{}];
     professionalWorkType: string;

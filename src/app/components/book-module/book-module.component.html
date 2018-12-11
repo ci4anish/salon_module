@@ -5,22 +5,59 @@
                            [selectedId]="selectedProfessionalId"
                            (selectProfessional)="selectProfessional($event)"></app-select-beautician>
 
-    <div class="available_hours" *ngIf="selectedProfessionalProfile">
+    <div class="available_hours" *ngIf="selectedProfessionalProfile && !!selectedService">
+      <div class="wrapper_date_picker">
+        <mat-form-field>
+          <input matInput
+                 (dateChange)="selectedDateInSchedule($event)"
+                 [matDatepicker]="picker"
+                 placeholder="Choose a date">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
       <div class="hours_title">
-        <h3>Select hour</h3>
+        <h3 class="select_hour">Select hour</h3>
       </div>
 
+      <div class="wrapper_space_scroll" *ngIf="selectedDateFromUser &&
+       !!selectedProfessionalProfile && !!selectedService">
+        <div class="wrapper_hours_slots">
+          <ul class="">
+            <li *ngFor="let slotTime of professionalHours"
+                [class.selected]="slotTime === selectedslotTime"
+                (click)="selectTimeSlot(slotTime)">
+              <div class="dis_flex time_slot_container ">
+                <div class="time_slot">{{slotTime.time}}</div>
+                <div class="time_slot_icon" #wrap_timeSlot>
+                  <i class="far fa-check"></i>
+                </div>
+                <div class="time_status">{{slotTime.availability}}</div>
+                <div class="price">
+                  <div *ngIf="selectedService">
+                    {{selectedService.service.basePrice}}&euro;
+                  </div>
+                </div>
+              </div>
+
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
   <div class="wrapper_services-selected">
     <div class="wrapper_select_item">
       <h3>Selected service</h3>
       <div *ngIf="selectedService" class="dis_flex service_wrapper">
-        <div class="service_title dis_flex">
-          {{selectedService.service.name}}
+        <div class="service_title ">
+          {{selectedService.service.name}} <br>
+          <p class="service_with" *ngIf="!!selectedProfessionalProfile">
+            with {{selectedProfessionalProfile.professional.user.person.firstName}}
+          </p>
         </div>
         <div class="service_price dis_flex">
-          {{selectedService.service.basePrice}} $
+          {{selectedService.service.basePrice}} &euro;
         </div>
         <div class="service_duration dis_flex">
           {{selectedService.service.minutes}} min
@@ -58,16 +95,10 @@
       </div>
     </div>
 
-    <form class="example-form">
-      <mat-form-field class="example-full-width">
-        <input type="text" placeholder="Pick one" aria-label="Number" matInput [formControl]="filterControl" [matAutocomplete]="auto">
-        <mat-autocomplete #auto="matAutocomplete">
-          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-            {{option}}
-          </mat-option>
-        </mat-autocomplete>
-      </mat-form-field>
-    </form>
+    <label>
+      <input type="text" [value]="searchStr" [formControl]="searchControl" placeholder="Search treatment"
+             class="search_treatment">
+    </label>
   </div>
   <div class="wrapper_total-bookInfo">
     <h2 class="text-center">{{salonName}}</h2>
@@ -78,11 +109,28 @@
       </div>
     </div>
     <div class="wrapper_total">
-      <div  *ngIf="selectedProfessionalProfile">
-        <div class="professional_logo dis_flex">
-          <img src="{{selectedProfessionalProfile.professional.avatar.url}}" alt="">
+      <div *ngIf="selectedProfessionalProfile">
+        <div class="wrapper_date_select dis_flex" *ngIf="selectedDateFromUser">
+          <div class="dis_flex header_boxes">
+            <div class="date_weekday">
+              {{selectedDateFromUser.weekDay}}
+            </div>
+            <div class="date_date">
+              {{selectedDateFromUser.date}}
+            </div>
+            <div class="date_month">
+              {{selectedDateFromUser.month}}
+            </div>
+          </div>
+          <div class="date_time">
+            <p *ngIf="selectedslotTime">{{selectedslotTime.time}} am</p>
+          </div>
         </div>
-        <h4 class="text-center">{{selectedProfessionalProfile.professional.user.person.firstName}}</h4>
+        <div class="wrapper_total_logo">
+          <div class="professional_logo dis_flex">
+            <img src="{{selectedProfessionalProfile.professional.avatar.url}}" alt="">
+          </div>
+        </div>
         <div class="job_content dis_flex" *ngIf="selectedService">
           <div class="dis_flex info">
             <div class="job_title">
@@ -95,7 +143,10 @@
               </div>
               <div class="job_price">{{selectedService.service.basePrice}}&euro;</div>
               <div class="book_now-btn text-center">
-                <button mat-raised-button color="primary">Book now</button>
+                <button mat-raised-button color="primary"
+
+                        (click)="bookNow()">Book now
+                </button>
               </div>
             </div>
 

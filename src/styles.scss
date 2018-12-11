@@ -32,3 +32,10 @@
 .text-right {
   text-align: right;
 }
+body {
+  background:
+    linear-gradient(135deg, #fcfcfc 21px, #E2F7FF 22px, #d9ecff 24px, transparent 24px, transparent 67px, #e3f9ff 67px, #d9ecff 69px, transparent 69px),
+    linear-gradient(225deg, #fcfcfc 21px, #E2F7FF 22px, #d9ecff 24px, transparent 24px, transparent 67px, #e6f7ff 67px, #d9ecff 69px, transparent 69px)0 64px;
+  background-color:#f4f2f2;
+  background-size: 64px 128px;
+}

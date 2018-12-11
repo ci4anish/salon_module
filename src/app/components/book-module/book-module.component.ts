@@ -2,11 +2,13 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {BookModuleService} from '../../services/book-module.service';
 import {SalonInfoService} from '../../services/salon-info.service';
-import {combineLatest, Observable} from 'rxjs';
+import {combineLatest, Observable, Subscription} from 'rxjs';
 import {SalonInfo} from '../../Interfaces/salon-info.interface';
 import {Professional} from '../../Interfaces/professional.interface';
-import {map, startWith} from 'rxjs/internal/operators';
+import {debounce, debounceTime, map, startWith} from 'rxjs/internal/operators';
 import {FormControl} from '@angular/forms';
+import {Service} from '../../Interfaces/service.interface';
+import {MatListOption} from '@angular/material';
 
 @Component({
   selector: 'app-book-module',
@@ -14,27 +16,33 @@ import {FormControl} from '@angular/forms';
   styleUrls: ['./book-module.component.scss']
 })
 export class BookModuleComponent implements OnInit {
+  public selectedslotTime;
   public displayedServiceGroups;
   public displayedProfessionals;
-  public selectedService;
+  public selectedService: Service;
   public selectedProfessionalId;
   public salonName: string;
   public selectedProfessionalProfile: Professional;
-  public availableHours;
   public salonAvatar;
-  public professionalHours;
+  public professionalHours: {}[] = [];
+  public searchControl: FormControl = new FormControl();
+  public searchStr = '';
+  public selectedHours: boolean;
+  public selectedDateFromUser;
+  public todayDay;
+  public selectArrTimeSlot = [];
 
-  private professionals2ServiceMap: Map<number, [{}]> = new Map();
-  private services2professionalMap: Map<number, [{}]> = new Map();
+
+  private professionals2ServiceMap: Map<number, Service[]> = new Map();
+  private services2professionalMap: Map<number, {}[]> = new Map();
   private serviceGroups;
   private salonProfessionals = <any>[];
   private salonServices = <any>[];
   private selectedServiceGroup;
   private selectedServiceIndex;
   private salonId: number;
-  filterControl = new FormControl();
-  options: string[] = [];
-  filteredOptions: Observable<string[]>;
+  private formCtrlSub: Subscription;
+  public selectArrDate = [];
 
   constructor(private bookModuleService: BookModuleService,
               private route: ActivatedRoute,
@@ -42,6 +50,8 @@ export class BookModuleComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.todayDay = new Date();
+    this.selectedHours = false;
     this.salonId = +this.route.snapshot.queryParams.salonId;
     this.salonDetailsService.getSalonInfo(this.salonId)
       .subscribe((data: SalonInfo) => {
@@ -75,12 +85,10 @@ export class BookModuleComponent implements OnInit {
           return this.salonProfessionals.find(p => p.professional.id === professional.id);
         });
         item.service = this.salonServices.find(s => s.service.id === item.service.id);
-        this.services2professionalMap.set(item.service.id, item.professionals);
+        this.services2professionalMap.set(item.service.service.id, item.professionals);
       });
       this.getDisplayedServicesGroups(this.salonServices);
       this.getDisplayedProfessionals();
-      this.getTreatmentOptions(this.salonServices);
-
 
       const selectedServiceId = +this.route.snapshot.queryParams.serviceId;
       if (selectedServiceId) {
@@ -88,13 +96,15 @@ export class BookModuleComponent implements OnInit {
       }
     });
 
-
     // this.salonDetailsService.getAvailableHoursByProfessional(4)
     //   .subscribe( data => console.log(data));
     // problem with JSON object ? have mistake
+    this.formCtrlSub = this.searchControl.valueChanges
+      .pipe(debounceTime(600))
+      .subscribe(filteringStr => this.sortServicesByTreatment(filteringStr));
   }
 
-  findAndSelectService(selectedServiceId: number) {
+  private findAndSelectService(selectedServiceId: number) {
     for (let i = 0; i < this.displayedServiceGroups.length; i++) {
       const groupItem = this.displayedServiceGroups[i];
 
@@ -108,7 +118,7 @@ export class BookModuleComponent implements OnInit {
     }
   }
 
-  getDisplayedServicesGroups(currentServices) {
+  private getDisplayedServicesGroups(currentServices) {
     this.displayedServiceGroups = JSON.parse(JSON.stringify(this.serviceGroups));
     this.displayedServiceGroups.forEach(group => {
       const servicesIds = group.services;
@@ -123,59 +133,208 @@ export class BookModuleComponent implements OnInit {
     });
   }
 
-  getDisplayedProfessionals() {
+  private getDisplayedProfessionals() {
     this.displayedProfessionals = JSON.parse(JSON.stringify(this.salonProfessionals));
   }
 
-  selectProfessional(professionalId?) {
+  public selectProfessional(professionalId?) {
     if (professionalId !== undefined) {
       const masterServices = this.professionals2ServiceMap.get(professionalId);
       this.salonProfessionals.forEach(professional => {
         if (professional.id === professionalId) {
           this.selectedProfessionalProfile = professional;
-          this.salonDetailsService.getAvailableHoursByProfessional(professional.id)
-            .subscribe(data => this.professionalHours = data);
         }
       });
       this.getDisplayedServicesGroups(masterServices);
-      this.getTreatmentOptions(masterServices);
     } else {
       this.getDisplayedServicesGroups(this.salonServices);
-      this.getTreatmentOptions(this.salonServices);
       this.selectedProfessionalProfile = undefined;
+      this.professionalHours = [];
     }
   }
 
-  selectService(service: any, group: any) {
+  public selectService(service: Service, group: any) {
     this.selectedService = service;
+    console.log(this.selectedService);
     this.selectedServiceIndex = group.services.indexOf(service);
     group.services.splice(this.selectedServiceIndex, 1);
     this.selectedServiceGroup = group;
-    this.displayedProfessionals = this.services2professionalMap.get(service.id);
+    this.displayedProfessionals = this.services2professionalMap.get(service.service.id);
+
   }
 
-  clearSelected() {
+  public clearSelected() {
     const group = this.displayedServiceGroups.find(g => g.id === this.selectedServiceGroup.id);
     group.services.splice(this.selectedServiceIndex, 0, this.selectedService);
     this.selectedService = undefined;
+    this.professionalHours = [];
     this.displayedProfessionals = JSON.parse(JSON.stringify(this.salonProfessionals));
+    this.selectedDateFromUser = undefined;
+    this.selectedslotTime = undefined;
+
   }
 
-  private _filter(value: string): string[] {
+  private sortServicesByTreatment(value: string) {
     const filterValue = value.toLowerCase();
-
-    return this.options.filter(option => option.toLowerCase().includes(filterValue));
+    if (this.selectedProfessionalProfile !== undefined) {
+      let services = this.professionals2ServiceMap.get(this.selectedProfessionalProfile.id);
+      services = services.filter((service: Service) => {
+        if (service.service.name.toLowerCase().includes(filterValue)) {
+          return service;
+        }
+      });
+      this.getDisplayedServicesGroups(services);
+    } else {
+      let salonServices = JSON.parse(JSON.stringify(this.salonServices));
+      salonServices = salonServices.filter(service => {
+        if (service.service.name.toLowerCase().includes(filterValue)) {
+          return service;
+        }
+      });
+      this.getDisplayedServicesGroups(salonServices);
+    }
   }
 
-  getTreatmentOptions(services) {
-    this.options = [];
-    services.forEach(service => {
-      this.options.push(service.service.name);
-    });
-    this.filteredOptions = this.filterControl.valueChanges
-      .pipe(
-        startWith(''),
-        map(value => this._filter(value))
-      );
+  public selectedDateInSchedule(e) {
+    const dateFromUser = new Date(e.value);
+    const year = dateFromUser.getFullYear().toString().slice(-2);
+    const month = dateFromUser.getMonth() + 1;
+
+    let day = '';
+    if (dateFromUser.getDate().toString().length === 1) {
+      day = '0' + dateFromUser.getDate().toString();
+    } else {
+      day = dateFromUser.getDate().toString();
+    }
+    const selectedDay = year + month + day;
+    const viewData = dateFromUser.toDateString();
+    this.selectedDateFromUser = {
+      date: viewData.slice(7, 10),
+      month: viewData.slice(3, 7),
+      weekDay: viewData.slice(0, 3)
+    };
+    console.log(this.selectedDateFromUser);
+    this.selectArrDate.push(year, month, day);
+    console.log(selectedDay);
+
+    this.salonDetailsService.getAvailableHoursByProfessional(this.selectedProfessionalProfile.id, selectedDay)
+    // .subscribe(data => {
+    //   this.professionalHours = Object.keys(data)
+    //     .map(function (k) {
+    //       let date = new Date(+k).toTimeString();
+    //       date = date.slice(0, 5);
+    //       return {slot: date, status: data[k]};
+    //     });
+    //   this.selectedHours = true;
+    // });
+      .subscribe(timeSlots => {
+        const timeSlotsArr = [];
+        for (const k in timeSlots) {
+          if (timeSlots.hasOwnProperty(k)) {
+            timeSlotsArr.push({time: k, availability: timeSlots[k]});
+          }
+        }
+        const selectedTimeSlots = this.calcServiceTimeToTimeSlot(this.selectedService.service.minutes);
+        this.professionalHours = this.getFilteredTimeSlots(timeSlotsArr, selectedTimeSlots)
+          .map((k: { time: string, availability: string }) => {
+            let date = new Date(+k.time).toTimeString();
+            date = date.slice(0, 5);
+            return {time: date, availability: k.availability, timeMS: k.time};
+          });
+        this.selectedHours = true;
+        console.log(this.professionalHours);
+      });
+  }
+
+  public selectTimeSlot(timeSlot) {
+    this.selectedslotTime = timeSlot;
+    const serviceMin = this.selectedService.service.minutes;
+    const serviceDurationInMilliseconds = serviceMin * 60000;
+    const endMilliseconds = +timeSlot.timeMS + serviceDurationInMilliseconds;
+    this.selectArrTimeSlot.push(timeSlot.timeMS, endMilliseconds);
+  }
+
+  private calcServiceTimeToTimeSlot(duration) {
+    return duration / 15;
+  }
+
+  private getFilteredTimeSlots(timeSlots, selectedSlotsCount): {}[] {
+    const resultSlots = timeSlots.slice();
+    let timeSlotsCount = resultSlots.length;
+    let currentSlotCounter = 0;
+
+    while (currentSlotCounter < timeSlotsCount) {
+      const currentTimeSlot = resultSlots[currentSlotCounter];
+
+      if (currentTimeSlot.availability === 'busy') {
+        resultSlots.splice(currentSlotCounter, 1);
+        timeSlotsCount--;
+      } else {
+        let nextStepTimeSlotCounter = currentSlotCounter + selectedSlotsCount - 1;
+        if (nextStepTimeSlotCounter > resultSlots.length) {
+          nextStepTimeSlotCounter = resultSlots.length;
+        }
+        for (let i = nextStepTimeSlotCounter; i > currentSlotCounter; i--) {
+          if (i > (resultSlots.length - 1)) {
+            i = (resultSlots.length - 1);
+          }
+          const timeSlot = resultSlots[i];
+          if (timeSlot.availability === 'busy') {
+            const deleteSlotsCount = i - currentSlotCounter + 1;
+            resultSlots.splice(currentSlotCounter, deleteSlotsCount);
+            timeSlotsCount -= deleteSlotsCount;
+            break;
+          }
+        }
+      }
+      currentSlotCounter++;
+    }
+    return resultSlots;
+  }
+
+  bookNow() {
+    if (!!this.selectedProfessionalProfile && !!this.selectedService && this.selectedDateFromUser) {
+      const bookObj = {
+        timeFrame: {
+          startTimeMS: +this.selectArrTimeSlot[0],
+          endTimeMS: +this.selectArrTimeSlot[1]
+        },
+        status: 'PENDING',
+        type: 'BOOKING',
+        schedule: {
+          // id: this.selectedProfessionalProfile.professional.id
+          id: 4
+        },
+        creator: {
+          id: 1
+        },
+        appUser: {
+          id: 1
+        },
+        location: { id: 1 },
+        good: {
+          goodsType: 'SERVICE_LOCATION',
+          serviceLocation: {
+            id: this.selectedService.service.id
+          }
+        },
+      };
+      // console.log(bookJson);
+      // this.selectedService = undefined;
+      // this.selectedProfessionalProfile = undefined;
+      // this.selectArrDate = [];
+      // this.selectArrTimeSlot = [];
+      // this.selectProfessional(undefined);
+      this.bookModuleService.bookNowService(bookObj)
+        .subscribe(res => {
+          console.log(res);
+        });
+    }
+
   }
 }
+
+
+
+
+

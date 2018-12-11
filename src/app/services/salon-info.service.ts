@@ -4,7 +4,7 @@ import {SalonGeo} from '../Interfaces/salon-geo.interface';
 import {Observable, of} from 'rxjs';
 import {AvailableHours} from '../Interfaces/available-hours.interface';
 import {Professional} from '../Interfaces/professional.interface';
-import {apiUrl, time} from '../constants';
+import {apiUrl} from '../constants';
 
 @Injectable({
   providedIn: 'root'
@@ -23,9 +23,8 @@ export class SalonInfoService {
     return this.http.get<Professional>(this.url + 'location/' + salonId + '/professionals ');
   }
 
-  getAvailableHoursByProfessional(id: number) {
-    // return this.http.get(this.url + 'schedule/professional/1/yymmdd/181123/timezone/Europe-London/merged');
-    return of(time);
+  getAvailableHoursByProfessional(id: number, dateSelect) {
+    return this.http.get(this.url + 'schedule/professional/1/yymmdd/' + dateSelect + '/timezone/Europe-London/merged');
   }
 
   // getAdminsBySalon(salon: number): any {
@@ -70,5 +69,9 @@ export class SalonInfoService {
 
   getProfessionals2services(salonId: number) {
     return this.http.get(this.url + 'location/' + salonId + '/professionals2services');
+  }
+
+  sendBookService(object) {
+    return this.http.post(this.url + 'event', object);
   }
 }
