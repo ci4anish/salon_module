@@ -31,6 +31,7 @@ export class BookModuleComponent implements OnInit {
   public selectedDateFromUser;
   public todayDay;
   public selectArrTimeSlot = [];
+  public selectArrDate = [];
 
 
   private professionals2ServiceMap: Map<number, Service[]> = new Map();
@@ -42,7 +43,7 @@ export class BookModuleComponent implements OnInit {
   private selectedServiceIndex;
   private salonId: number;
   private formCtrlSub: Subscription;
-  public selectArrDate = [];
+  private selectedDay: string;
 
   constructor(private bookModuleService: BookModuleService,
               private route: ActivatedRoute,
@@ -135,14 +136,22 @@ export class BookModuleComponent implements OnInit {
 
   private getDisplayedProfessionals() {
     this.displayedProfessionals = JSON.parse(JSON.stringify(this.salonProfessionals));
+    this.selectedDay = '';
   }
 
   public selectProfessional(professionalId?) {
     if (professionalId !== undefined) {
+      this.selectedDateFromUser = [];
       const masterServices = this.professionals2ServiceMap.get(professionalId);
       this.salonProfessionals.forEach(professional => {
         if (professional.id === professionalId) {
           this.selectedProfessionalProfile = professional;
+          if (this.selectedDay !== '') {
+            this.professionalHours = [];
+            this.getProfessionalHours(professionalId, this.selectedDay);
+          } else {
+            this.professionalHours = [];
+          }
         }
       });
       this.getDisplayedServicesGroups(masterServices);
@@ -171,6 +180,7 @@ export class BookModuleComponent implements OnInit {
     this.displayedProfessionals = JSON.parse(JSON.stringify(this.salonProfessionals));
     this.selectedDateFromUser = undefined;
     this.selectedslotTime = undefined;
+    this.selectedDay = '';
 
   }
 
@@ -196,6 +206,8 @@ export class BookModuleComponent implements OnInit {
   }
 
   public selectedDateInSchedule(e) {
+    this.selectedslotTime = undefined;
+    this.selectArrDate = [];
     const dateFromUser = new Date(e.value);
     const year = dateFromUser.getFullYear().toString().slice(-2);
     const month = dateFromUser.getMonth() + 1;
@@ -206,27 +218,21 @@ export class BookModuleComponent implements OnInit {
     } else {
       day = dateFromUser.getDate().toString();
     }
-    const selectedDay = year + month + day;
+    this.selectedDay = year + month + day;
     const viewData = dateFromUser.toDateString();
     this.selectedDateFromUser = {
       date: viewData.slice(7, 10),
       month: viewData.slice(3, 7),
       weekDay: viewData.slice(0, 3)
     };
-    console.log(this.selectedDateFromUser);
     this.selectArrDate.push(year, month, day);
-    console.log(selectedDay);
 
-    this.salonDetailsService.getAvailableHoursByProfessional(this.selectedProfessionalProfile.id, selectedDay)
-    // .subscribe(data => {
-    //   this.professionalHours = Object.keys(data)
-    //     .map(function (k) {
-    //       let date = new Date(+k).toTimeString();
-    //       date = date.slice(0, 5);
-    //       return {slot: date, status: data[k]};
-    //     });
-    //   this.selectedHours = true;
-    // });
+    this.getProfessionalHours(this.selectedProfessionalProfile.id, this.selectedDay);
+
+  }
+
+  private getProfessionalHours(professionalId, date) {
+    this.salonDetailsService.getAvailableHoursByProfessional(professionalId, date)
       .subscribe(timeSlots => {
         const timeSlotsArr = [];
         for (const k in timeSlots) {
@@ -292,8 +298,9 @@ export class BookModuleComponent implements OnInit {
     return resultSlots;
   }
 
-  bookNow() {
-    if (!!this.selectedProfessionalProfile && !!this.selectedService && this.selectedDateFromUser) {
+  public bookNow() {
+    console.log(this.selectedslotTime)
+    if (!!this.selectedProfessionalProfile && !!this.selectedService && !!this.selectedDateFromUser) {
       const bookObj = {
         timeFrame: {
           startTimeMS: +this.selectArrTimeSlot[0],
@@ -311,7 +318,7 @@ export class BookModuleComponent implements OnInit {
         appUser: {
           id: 1
         },
-        location: { id: 1 },
+        location: {id: 1},
         good: {
           goodsType: 'SERVICE_LOCATION',
           serviceLocation: {
@@ -328,6 +335,12 @@ export class BookModuleComponent implements OnInit {
       this.bookModuleService.bookNowService(bookObj)
         .subscribe(res => {
           console.log(res);
+          this.selectedProfessionalProfile = undefined;
+          this.selectedService  = undefined;
+          this.selectedDateFromUser = [];
+          this.selectProfessional(undefined);
+          this.selectedProfessionalId = undefined;
+          this.selectedDay = '';
         });
     }
 

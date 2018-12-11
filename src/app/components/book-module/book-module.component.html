@@ -11,9 +11,9 @@
           <input matInput
                  (dateChange)="selectedDateInSchedule($event)"
                  [matDatepicker]="picker"
-                 placeholder="Choose a date">
+                 placeholder="Choose a date" disabled>
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
+          <mat-datepicker #picker disabled="false"></mat-datepicker>
         </mat-form-field>
       </div>
       <div class="hours_title">
@@ -63,7 +63,7 @@
           {{selectedService.service.minutes}} min
         </div>
         <div class="service_booking dis_flex">
-          <button mat-button (click)="clearSelected()">
+          <button mat-icon-button (click)="clearSelected()">
             <i class="material-icons">
               clear
             </i>
@@ -72,7 +72,7 @@
       </div>
     </div>
     <div *ngFor="let group of displayedServiceGroups">
-      <div class="services_content">
+      <div class="services_content" *ngIf="group.services.length > 0">
         <h3>{{group.name}}</h3>
         <div class="dis_flex service_wrapper" *ngFor="let service of group.services">
           <div class="service_title dis_flex">
@@ -85,7 +85,7 @@
             {{service.service.minutes}} min
           </div>
           <div class="service_booking dis_flex">
-            <button mat-button (click)="selectService(service, group)" [disabled]="selectedService">
+            <button mat-icon-button (click)="selectService(service, group)" [disabled]="selectedService">
               <i class="material-icons">
                 add
               </i>
@@ -110,7 +110,7 @@
     </div>
     <div class="wrapper_total">
       <div *ngIf="selectedProfessionalProfile">
-        <div class="wrapper_date_select dis_flex" *ngIf="selectedDateFromUser">
+        <div class="wrapper_date_select dis_flex" *ngIf="selectedDateFromUser && selectedslotTime">
           <div class="dis_flex header_boxes">
             <div class="date_weekday">
               {{selectedDateFromUser.weekDay}}
@@ -123,7 +123,7 @@
             </div>
           </div>
           <div class="date_time">
-            <p *ngIf="selectedslotTime">{{selectedslotTime.time}} am</p>
+            <p >{{selectedslotTime.time}} am</p>
           </div>
         </div>
         <div class="wrapper_total_logo">
@@ -144,22 +144,20 @@
               <div class="job_price">{{selectedService.service.basePrice}}&euro;</div>
               <div class="book_now-btn text-center">
                 <button mat-raised-button color="primary"
-
+                        [disabled]="!this.selectedslotTime"
                         (click)="bookNow()">Book now
                 </button>
               </div>
             </div>
-
           </div>
         </div>
-
       </div>
-
     </div>
   </div>
 </div>
 
-<button mat-raised-button color="primary" style="margin: 30px 10px" routerLink="/">salon-mock</button>
+<button mat-raised-button color="primary" style="margin: 30px 10px" routerLink="../salon/{{salonId}}"
+        >salon-mock</button>
 
 
 <!--<app-date-picker></app-date-picker>-->
