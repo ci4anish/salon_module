@@ -27,14 +27,6 @@ export class SalonInfoService {
     return this.http.get(this.url + 'schedule/professional/1/yymmdd/' + dateSelect + '/timezone/Europe-London/merged');
   }
 
-  // getAdminsBySalon(salon: number): any {
-  //   return this.http.get(this.url + salon + '/admins ');
-  // }
-  //
-  // getUser(salon: number) {
-  //
-  // }
-
   getAvailabilityHours(salonId: number): Observable<AvailableHours> {
     return this.http.get<AvailableHours>(this.url + 'availabilityhours/' + salonId);
   }
@@ -69,9 +61,5 @@ export class SalonInfoService {
 
   getProfessionals2services(salonId: number) {
     return this.http.get(this.url + 'location/' + salonId + '/professionals2services');
-  }
-
-  sendBookService(object) {
-    return this.http.post(this.url + 'event', object);
   }
 }

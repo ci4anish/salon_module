@@ -97,9 +97,6 @@ export class BookModuleComponent implements OnInit {
       }
     });
 
-    // this.salonDetailsService.getAvailableHoursByProfessional(4)
-    //   .subscribe( data => console.log(data));
-    // problem with JSON object ? have mistake
     this.formCtrlSub = this.searchControl.valueChanges
       .pipe(debounceTime(600))
       .subscribe(filteringStr => this.sortServicesByTreatment(filteringStr));
@@ -326,12 +323,7 @@ export class BookModuleComponent implements OnInit {
           }
         },
       };
-      // console.log(bookJson);
-      // this.selectedService = undefined;
-      // this.selectedProfessionalProfile = undefined;
-      // this.selectArrDate = [];
-      // this.selectArrTimeSlot = [];
-      // this.selectProfessional(undefined);
+
       this.bookModuleService.bookNowService(bookObj)
         .subscribe(res => {
           console.log(res);
