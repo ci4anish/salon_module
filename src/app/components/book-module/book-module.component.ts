@@ -33,7 +33,6 @@ export class BookModuleComponent implements OnInit {
   public selectArrTimeSlot = [];
   public selectArrDate = [];
 
-
   private professionals2ServiceMap: Map<number, Service[]> = new Map();
   private services2professionalMap: Map<number, {}[]> = new Map();
   private serviceGroups;
@@ -44,10 +43,13 @@ export class BookModuleComponent implements OnInit {
   private salonId: number;
   private formCtrlSub: Subscription;
   private selectedDay: string;
+  private availableDays: any[];
 
   constructor(private bookModuleService: BookModuleService,
               private route: ActivatedRoute,
               private salonDetailsService: SalonInfoService) {
+
+    this.filterDaysDate = this.filterDaysDate.bind(this);
   }
 
   ngOnInit() {
@@ -155,12 +157,25 @@ export class BookModuleComponent implements OnInit {
         }
       });
       this.getDisplayedServicesGroups(masterServices);
+
+      // this.salonDetailsService.getAvailableDaysByProfessional(this.salonId, professionalId)
+      //   .subscribe((res: any[]) => {
+      //     this.availableDays = res;
+      //   });
+
     } else {
       this.getDisplayedServicesGroups(this.salonServices);
       this.selectedProfessionalProfile = undefined;
       this.selectedProfessionalId = undefined;
       this.professionalHours = [];
     }
+  }
+
+  public filterDaysDate(d: Date): boolean {
+    // const day = d.getDay();
+    // return day !== 0 && day !== 6;
+
+    return true;
   }
 
   public selectService(service: Service, group: any) {
@@ -241,7 +256,8 @@ export class BookModuleComponent implements OnInit {
           }
         }
         const selectedTimeSlots = this.calcServiceTimeToTimeSlot(this.selectedService.service.minutes);
-        this.professionalHours = this.getFilteredTimeSlots(timeSlotsArr, selectedTimeSlots)
+        // this.professionalHours = this.getFilteredTimeSlots(timeSlotsArr, selectedTimeSlots)
+        this.professionalHours = timeSlotsArr
           .map((k: { time: string, availability: string }) => {
             let date = new Date(+k.time).toTimeString();
             date = date.slice(0, 5);
@@ -271,7 +287,6 @@ export class BookModuleComponent implements OnInit {
 
     while (currentSlotCounter < timeSlotsCount) {
       const currentTimeSlot = resultSlots[currentSlotCounter];
-
       if (currentTimeSlot.availability === 'busy') {
         resultSlots.splice(currentSlotCounter, 1);
         timeSlotsCount--;
@@ -299,7 +314,6 @@ export class BookModuleComponent implements OnInit {
   }
 
   public bookNow() {
-    console.log(this.selectedslotTime)
     if (!!this.selectedProfessionalProfile && !!this.selectedService && !!this.selectedDateFromUser) {
       const bookObj = {
         timeFrame: {
@@ -326,17 +340,11 @@ export class BookModuleComponent implements OnInit {
           }
         },
       };
-      // console.log(bookJson);
-      // this.selectedService = undefined;
-      // this.selectedProfessionalProfile = undefined;
-      // this.selectArrDate = [];
-      // this.selectArrTimeSlot = [];
-      // this.selectProfessional(undefined);
       this.bookModuleService.bookNowService(bookObj)
         .subscribe(res => {
           console.log(res);
           this.selectedProfessionalProfile = undefined;
-          this.selectedService  = undefined;
+          this.selectedService = undefined;
           this.selectedDateFromUser = [];
           this.selectProfessional(undefined);
           this.selectedProfessionalId = undefined;

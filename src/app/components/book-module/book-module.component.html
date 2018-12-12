@@ -11,6 +11,7 @@
           <input matInput
                  (dateChange)="selectedDateInSchedule($event)"
                  [matDatepicker]="picker"
+                 [matDatepickerFilter]="filterDaysDate"
                  placeholder="Choose a date" disabled>
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker disabled="false"></mat-datepicker>
@@ -26,7 +27,7 @@
           <ul class="">
             <li *ngFor="let slotTime of professionalHours"
                 [class.selected]="slotTime === selectedslotTime"
-                (click)="selectTimeSlot(slotTime)">
+                (click)="selectTimeSlot(slotTime)"            >
               <div class="dis_flex time_slot_container ">
                 <div class="time_slot">{{slotTime.time}}</div>
                 <div class="time_slot_icon" #wrap_timeSlot>
@@ -123,7 +124,7 @@
             </div>
           </div>
           <div class="date_time">
-            <p >{{selectedslotTime.time}} am</p>
+            <p >{{selectedslotTime.time}}</p>
           </div>
         </div>
         <div class="wrapper_total_logo">
