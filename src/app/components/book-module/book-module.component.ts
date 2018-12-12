@@ -326,7 +326,7 @@ export class BookModuleComponent implements OnInit {
         appUser: {
           id: 1
         },
-        location: {id: 1},
+        location: {id: this.salonId},
         good: {
           goodsType: 'SERVICE_LOCATION',
           serviceLocation: {
