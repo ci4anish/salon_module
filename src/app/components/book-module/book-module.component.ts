@@ -157,12 +157,6 @@ export class BookModuleComponent implements OnInit {
         }
       });
       this.getDisplayedServicesGroups(masterServices);
-
-      // this.salonDetailsService.getAvailableDaysByProfessional(this.salonId, professionalId)
-      //   .subscribe((res: any[]) => {
-      //     this.availableDays = res;
-      //   });
-
     } else {
       this.getDisplayedServicesGroups(this.salonServices);
       this.selectedProfessionalProfile = undefined;
@@ -340,6 +334,7 @@ export class BookModuleComponent implements OnInit {
           }
         },
       };
+
       this.bookModuleService.bookNowService(bookObj)
         .subscribe(res => {
           console.log(res);

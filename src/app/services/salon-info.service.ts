@@ -87,8 +87,4 @@ export class SalonInfoService {
   getProfessionals2services(salonId: number) {
     return this.http.get(this.url + 'location/' + salonId + '/professionals2services');
   }
-
-  sendBookService(object) {
-    return this.http.post(this.url + 'event', object);
-  }
 }
