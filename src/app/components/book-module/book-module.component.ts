@@ -9,6 +9,7 @@ import {debounce, debounceTime, map, startWith} from 'rxjs/internal/operators';
 import {FormControl} from '@angular/forms';
 import {Service} from '../../Interfaces/service.interface';
 import {MatListOption} from '@angular/material';
+import {MockLoginService} from '../../services/mock-login.service';
 
 @Component({
   selector: 'app-book-module',
@@ -33,6 +34,7 @@ export class BookModuleComponent implements OnInit {
   public selectArrTimeSlot = [];
   public selectArrDate = [];
 
+
   private professionals2ServiceMap: Map<number, Service[]> = new Map();
   private services2professionalMap: Map<number, {}[]> = new Map();
   private serviceGroups;
@@ -43,16 +45,20 @@ export class BookModuleComponent implements OnInit {
   private salonId: number;
   private formCtrlSub: Subscription;
   private selectedDay: string;
-  private availableDays: any[];
+  private daysTimeFrame: any[];
+  private userTimeZone: string;
 
   constructor(private bookModuleService: BookModuleService,
               private route: ActivatedRoute,
+              private mockLoginService: MockLoginService,
               private salonDetailsService: SalonInfoService) {
 
     this.filterDaysDate = this.filterDaysDate.bind(this);
   }
 
   ngOnInit() {
+    // this.userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone.replace('/', '-');
+    this.userTimeZone = 'Greenwich Mean Time';
     this.todayDay = new Date();
     this.selectedHours = false;
     this.salonId = +this.route.snapshot.queryParams.salonId;
@@ -99,9 +105,7 @@ export class BookModuleComponent implements OnInit {
       }
     });
 
-    // this.salonDetailsService.getAvailableHoursByProfessional(4)
-    //   .subscribe( data => console.log(data));
-    // problem with JSON object ? have mistake
+
     this.formCtrlSub = this.searchControl.valueChanges
       .pipe(debounceTime(600))
       .subscribe(filteringStr => this.sortServicesByTreatment(filteringStr));
@@ -148,12 +152,18 @@ export class BookModuleComponent implements OnInit {
       this.salonProfessionals.forEach(professional => {
         if (professional.id === professionalId) {
           this.selectedProfessionalProfile = professional;
-          if (this.selectedDay !== '') {
-            this.professionalHours = [];
-            this.getProfessionalHours(professionalId, this.selectedDay);
-          } else {
-            this.professionalHours = [];
-          }
+          this.salonDetailsService.getAvailableDaysByProfessional(this.salonId, professionalId)
+            .subscribe(res => {
+              this.daysTimeFrame = res.weekTimeFrame
+                .map(item => {
+                  item.weekDay = item.weekDay.slice(0, 3).toLowerCase();
+                  return item;
+                });
+              const sun = this.daysTimeFrame.splice(-1, 1)[0];
+              this.daysTimeFrame.unshift(sun);
+            });
+
+          this.professionalHours = [];
         }
       });
       this.getDisplayedServicesGroups(masterServices);
@@ -166,15 +176,18 @@ export class BookModuleComponent implements OnInit {
   }
 
   public filterDaysDate(d: Date): boolean {
-    // const day = d.getDay();
-    // return day !== 0 && day !== 6;
-
-    return true;
+    const day = d.getDay();
+    const dayObj = this.daysTimeFrame[day];
+    if (dayObj.timeFrame.startTimeMS !== dayObj.timeFrame.endTimeMS) {
+      return true;
+    } else {
+      return false;
+    }
+    this.daysTimeFrame = [];
   }
 
   public selectService(service: Service, group: any) {
     this.selectedService = service;
-    console.log(this.selectedService);
     this.selectedServiceIndex = group.services.indexOf(service);
     group.services.splice(this.selectedServiceIndex, 1);
     this.selectedServiceGroup = group;
@@ -220,6 +233,7 @@ export class BookModuleComponent implements OnInit {
     const dateFromUser = new Date(e.value);
     const year = dateFromUser.getFullYear().toString().slice(-2);
     const month = dateFromUser.getMonth() + 1;
+    this.selectArrTimeSlot = [];
 
     let day = '';
     if (dateFromUser.getDate().toString().length === 1) {
@@ -235,13 +249,13 @@ export class BookModuleComponent implements OnInit {
       weekDay: viewData.slice(0, 3)
     };
     this.selectArrDate.push(year, month, day);
-
     this.getProfessionalHours(this.selectedProfessionalProfile.id, this.selectedDay);
 
   }
 
-  private getProfessionalHours(professionalId, date) {
-    this.salonDetailsService.getAvailableHoursByProfessional(professionalId, date)
+  private getProfessionalHours(professionalId, dateFromUser) {
+    this.professionalHours = [];
+    this.salonDetailsService.getAvailableHoursByProfessional(professionalId, dateFromUser, this.userTimeZone)
       .subscribe(timeSlots => {
         const timeSlotsArr = [];
         for (const k in timeSlots) {
@@ -251,14 +265,18 @@ export class BookModuleComponent implements OnInit {
         }
         const selectedTimeSlots = this.calcServiceTimeToTimeSlot(this.selectedService.service.minutes);
         // this.professionalHours = this.getFilteredTimeSlots(timeSlotsArr, selectedTimeSlots)
+
         this.professionalHours = timeSlotsArr
           .map((k: { time: string, availability: string }) => {
-            let date = new Date(+k.time).toTimeString();
-            date = date.slice(0, 5);
-            return {time: date, availability: k.availability, timeMS: k.time};
+            const date = new Date(
+              parseInt(20 + this.selectArrDate[0], 10),
+              this.selectArrDate[1] - 1,
+              parseInt(this.selectArrDate[2], 10));
+            date.setMilliseconds(parseInt(k.time, 10));
+            const dateStr = date.toTimeString().slice(0, 5);
+            return {time: dateStr, availability: k.availability, timeMS: k.time};
           });
         this.selectedHours = true;
-        console.log(this.professionalHours);
       });
   }
 
@@ -266,8 +284,14 @@ export class BookModuleComponent implements OnInit {
     this.selectedslotTime = timeSlot;
     const serviceMin = this.selectedService.service.minutes;
     const serviceDurationInMilliseconds = serviceMin * 60000;
-    const endMilliseconds = +timeSlot.timeMS + serviceDurationInMilliseconds;
-    this.selectArrTimeSlot.push(timeSlot.timeMS, endMilliseconds);
+    const date = new Date(
+      parseInt(20 + this.selectArrDate[0], 10),
+      this.selectArrDate[1] - 1,
+      parseInt(this.selectArrDate[2], 10));
+    const startMsOfSelectedDateTimeSlot = date.getTime() + parseInt(timeSlot.timeMS, 10);
+    const endMsOfSelectedDateTimeSlot = startMsOfSelectedDateTimeSlot + serviceDurationInMilliseconds;
+    this.selectArrTimeSlot = [startMsOfSelectedDateTimeSlot, endMsOfSelectedDateTimeSlot];
+    console.log(this.selectArrTimeSlot);
   }
 
   private calcServiceTimeToTimeSlot(duration) {
@@ -316,17 +340,17 @@ export class BookModuleComponent implements OnInit {
         },
         status: 'PENDING',
         type: 'BOOKING',
+        notes: 'test',
         schedule: {
           id: this.selectedProfessionalProfile.professional.id
-          // id: 4
         },
         creator: {
-          id: 1
+          id: 4
         },
         appUser: {
-          id: 1
+          id: 4
         },
-        location: {id: 1},
+        location: {id: this.salonId},
         good: {
           goodsType: 'SERVICE_LOCATION',
           serviceLocation: {
@@ -334,10 +358,8 @@ export class BookModuleComponent implements OnInit {
           }
         },
       };
-
       this.bookModuleService.bookNowService(bookObj)
         .subscribe(res => {
-          console.log(res);
           this.selectedProfessionalProfile = undefined;
           this.selectedService = undefined;
           this.selectedDateFromUser = [];
@@ -349,6 +371,7 @@ export class BookModuleComponent implements OnInit {
     }
 
   }
+
 }
 
 

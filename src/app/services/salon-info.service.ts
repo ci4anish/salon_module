@@ -36,8 +36,8 @@ export class SalonInfoService {
     return this.http.get<Professional>(this.url + 'location/' + salonId + '/professionals ');
   }
 
-  getAvailableHoursByProfessional(id: number, dateSelect) {
-    return this.http.get(this.url + 'schedule/professional/1/yymmdd/' + dateSelect + '/timezone/Europe-London/merged');
+  getAvailableHoursByProfessional(id: number, dateSelect: string, timeZone: string) {
+    return this.http.get(this.url + 'schedule/professional/' + id + '/yymmdd/' + dateSelect + '/timezone/' + timeZone + '/merged');
   }
 
   getAvailableDaysByProfessional(salonId: number, professionalId: number) {

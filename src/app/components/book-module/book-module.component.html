@@ -1,4 +1,5 @@
 <app-header [salonAvatar]="salonAvatar"></app-header>
+
 <div class="wrapper_book-module dis_flex">
   <div class="wrapper_professional-info">
     <app-select-beautician [professionals]="displayedProfessionals"
@@ -11,6 +12,7 @@
           <input matInput
                  (dateChange)="selectedDateInSchedule($event)"
                  [matDatepicker]="picker"
+                 [min]="todayDay"
                  [matDatepickerFilter]="filterDaysDate"
                  placeholder="Choose a date" disabled>
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -159,6 +161,7 @@
 
 <button mat-raised-button color="primary" style="margin: 30px 10px" routerLink="../salon/{{salonId}}"
         >salon-mock</button>
+
 
 
 <!--<app-date-picker></app-date-picker>-->
