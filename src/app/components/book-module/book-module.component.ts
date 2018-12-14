@@ -9,7 +9,7 @@ import {debounce, debounceTime, map, startWith} from 'rxjs/internal/operators';
 import {FormControl} from '@angular/forms';
 import {Service} from '../../Interfaces/service.interface';
 import {MatListOption} from '@angular/material';
-import {MockLoginService} from '../../services/mock-login.service';
+// import {MockLoginService} from '../../services/mock-login.service';
 
 @Component({
   selector: 'app-book-module',
@@ -50,7 +50,7 @@ export class BookModuleComponent implements OnInit {
 
   constructor(private bookModuleService: BookModuleService,
               private route: ActivatedRoute,
-              private mockLoginService: MockLoginService,
+              // private mockLoginService: MockLoginService,
               private salonDetailsService: SalonInfoService) {
 
     this.filterDaysDate = this.filterDaysDate.bind(this);
@@ -153,7 +153,7 @@ export class BookModuleComponent implements OnInit {
         if (professional.id === professionalId) {
           this.selectedProfessionalProfile = professional;
           this.salonDetailsService.getAvailableDaysByProfessional(this.salonId, professionalId)
-            .subscribe(res => {
+            .subscribe((res : any) => {
               this.daysTimeFrame = res.weekTimeFrame
                 .map(item => {
                   item.weekDay = item.weekDay.slice(0, 3).toLowerCase();
