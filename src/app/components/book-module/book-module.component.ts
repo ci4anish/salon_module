@@ -1,14 +1,14 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {BookModuleService} from '../../services/book-module.service';
-import {SalonInfoService} from '../../services/salon-info.service';
-import {combineLatest, ReplaySubject} from 'rxjs';
-import {SalonInfo} from '../../Interfaces/salon-info.interface';
-import {Professional} from '../../Interfaces/professional.interface';
-import {debounceTime, takeUntil} from 'rxjs/internal/operators';
-import {FormControl} from '@angular/forms';
-import {Service} from '../../Interfaces/service.interface';
-import {timeZone, defaultProfessionalPhoto} from '../../constants';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { BookModuleService } from '../../services/book-module.service';
+import { SalonInfoService } from '../../services/salon-info.service';
+import { combineLatest, ReplaySubject } from 'rxjs';
+import { SalonInfo } from '../../Interfaces/salon-info.interface';
+import { Professional } from '../../Interfaces/professional.interface';
+import { debounceTime, takeUntil } from 'rxjs/internal/operators';
+import { FormControl } from '@angular/forms';
+import { Service } from '../../Interfaces/service.interface';
+import { timeZone, defaultProfessionalPhoto } from '../../constants';
 
 @Component({
   selector: 'app-book-module',
@@ -149,7 +149,7 @@ export class BookModuleComponent implements OnInit, OnDestroy {
       this.salonProfessionals.forEach(professional => {
         if (professional.id === professionalId) {
           this.selectedProfessionalProfile = professional;
-          this.salonDetailsService.getAvailableDaysByProfessional(this.salonId, professionalId)
+          this.salonDetailsService.getAvailableDaysByProfessional(this.salonId, this.selectedProfessionalProfile.professional.id)
             .subscribe((res: any) => {
               this.daysTimeFrame = res.weekTimeFrame
                 .map(item => {
@@ -198,7 +198,7 @@ export class BookModuleComponent implements OnInit, OnDestroy {
         const calcServiceTimeToTimeSlot = this.calcServiceTimeToTimeSlot(this.selectedService.service.minutes);
         this.professionalHours = this.getFilteredTimeSlots(this.professionalHours, calcServiceTimeToTimeSlot);
       } else if (!!this.selectedDay) {
-        this.getProfessionalHours(this.selectedProfessionalProfile.id, this.selectedDay);
+        this.getProfessionalHours(this.selectedProfessionalProfile.professional.id, this.selectedDay);
       }
     }
   }
@@ -256,7 +256,7 @@ export class BookModuleComponent implements OnInit, OnDestroy {
     };
     this.selectArrDate.push(year, month, day);
     if (this.selectedService) {
-      this.getProfessionalHours(this.selectedProfessionalProfile.id, this.selectedDay);
+      this.getProfessionalHours(this.selectedProfessionalProfile.professional.id, this.selectedDay);
     }
 
   }

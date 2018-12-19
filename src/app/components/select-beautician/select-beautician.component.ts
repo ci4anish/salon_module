@@ -17,7 +17,7 @@ export class SelectBeauticianComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.professionals.currentValue) {
+    if (changes.professionals && changes.professionals.currentValue) {
       if (changes.professionals.currentValue.length > 0) {
         this.disableSelectProfessionals = false;
       }
