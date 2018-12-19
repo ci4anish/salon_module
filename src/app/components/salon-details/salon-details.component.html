@@ -7,11 +7,13 @@
   <div class="container dis_flex">
     <div class="details_wrapper ">
       <div class="wrappper_icons">
-        <div class="wrapper_social-icons dis_flex" *ngIf="salonSocialLinks.length > 0">
-          <div *ngFor="let link of salonSocialLinks">
-            <a href="{{link.url}}" target="_blank">
-              <i [ngClass]="socialLinks[link.id]"></i>
-            </a>
+        <div class="wrapper_social-icons dis_flex">
+          <div class="wrapper_social-icons dis_flex" *ngIf="salonSocialLinks.length > 0">
+            <div *ngFor="let link of salonSocialLinks">
+              <a href="{{link.url}}" target="_blank">
+                <i [ngClass]="socialLinks[link.id]"></i>
+              </a>
+            </div>
           </div>
         </div>
         <div class="wrapper_meet" *ngIf="professionalsBySalon.length > 0">
