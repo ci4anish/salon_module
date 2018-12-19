@@ -21,6 +21,7 @@ import {
   MatRadioGroup,
   MatRippleModule,
   MatSelectModule,
+  MatSnackBarModule
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MapComponent} from './components/map/map.component';
@@ -69,7 +70,8 @@ import {SelectBeauticianComponent} from './components/select-beautician/select-b
     ReactiveFormsModule,
     NguCarouselModule,
     MatSelectModule,
-    MatListModule
+    MatListModule,
+    MatSnackBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

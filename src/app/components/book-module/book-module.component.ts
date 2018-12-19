@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { MatSnackBar } from '@angular/material';
 import { BookModuleService } from '../../services/book-module.service';
 import { SalonInfoService } from '../../services/salon-info.service';
 import { combineLatest, ReplaySubject } from 'rxjs';
@@ -9,6 +10,10 @@ import { debounceTime, takeUntil } from 'rxjs/internal/operators';
 import { FormControl } from '@angular/forms';
 import { Service } from '../../Interfaces/service.interface';
 import { timeZone, defaultProfessionalPhoto } from '../../constants';
+import { HttpErrorResponse } from '@angular/common/http';
+import { catchError } from 'rxjs/internal/operators';
+import { throwError } from 'rxjs';
+
 
 @Component({
   selector: 'app-book-module',
@@ -51,6 +56,7 @@ export class BookModuleComponent implements OnInit, OnDestroy {
 
   constructor(private bookModuleService: BookModuleService,
               private route: ActivatedRoute,
+              private snackBar: MatSnackBar,
               private salonDetailsService: SalonInfoService) {
 
     this.filterDaysDate = this.filterDaysDate.bind(this);
@@ -392,6 +398,9 @@ export class BookModuleComponent implements OnInit, OnDestroy {
         },
       };
       this.bookModuleService.bookNowService(bookObj)
+        .pipe(
+          catchError(this.handleError.bind(this))
+        )
         .subscribe((res: any) => {
           alert('successful  ' + 'id: ' + res.id);
           this.selectedProfessionalProfile = undefined;
@@ -415,6 +424,21 @@ export class BookModuleComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroyed$.next(true);
     this.destroyed$.complete();
+  }
+
+  private handleError(error?: HttpErrorResponse) {
+    if (error.error instanceof ErrorEvent) {
+      console.error('An error occurred:', error.error.message);
+    } else if (error.status === 406) {
+      console.error(error.error.msg);
+      this.snackBar.open(error.error.msg, null, {
+        duration: 2000,
+      });
+    } else {
+      console.error(error.error);
+    }
+    return throwError(
+      'Something bad happened; please try again later.');
   }
 
 }
