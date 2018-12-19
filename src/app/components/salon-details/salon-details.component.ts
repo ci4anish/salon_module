@@ -6,7 +6,7 @@ import {AvailableHours} from '../../Interfaces/available-hours.interface';
 import {SalonGeo} from '../../Interfaces/salon-geo.interface';
 import {Review} from '../../Interfaces/review.interface';
 import {Portfolio} from '../../Interfaces/portfolio.interface';
-import {amenities, payments, socialLinks, defaultSalonDescription,defaultProfessionalPhoto} from '../../constants';
+import {amenities, payments, socialLinks, defaultSalonDescription, defaultProfessionalPhoto} from '../../constants';
 
 @Component({
   selector: 'app-salon-details',

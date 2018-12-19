@@ -4,7 +4,7 @@ import {SalonGeo} from '../Interfaces/salon-geo.interface';
 import {Observable, of} from 'rxjs';
 import {AvailableHours} from '../Interfaces/available-hours.interface';
 import {Professional} from '../Interfaces/professional.interface';
-import {apiUrl, mock} from '../constants';
+import {apiUrl} from '../constants';
 
 
 @Injectable({
@@ -38,12 +38,11 @@ export class SalonInfoService {
   }
 
   getAvailableHoursByProfessional(professionalId: number, dateSelect: string, timeZone: string) {
-    //   return this.http.get(this.url + 'schedule/professional/' + professionalId + '/yymmdd/' + dateSelect + '/timezone/' + timeZone +
-    //     '/merged' + '?includeAvailabilityHours=true', this.httpOptions);
+    return this.http.get(this.url + 'schedule/professional/' + professionalId + '/yymmdd/' + dateSelect + '/timezone/' + timeZone +
+      '/merged' + '?includeAvailabilityHours=true', this.httpOptions);
 
-    // }
-    return of(mock)
   }
+
   getAvailableDaysByProfessional(salonId: number, professionalId: number) {
     return this.http.get(this.url + 'location/' + salonId + '/professional/' + professionalId + '/availabilityhours', this.httpOptions);
   }

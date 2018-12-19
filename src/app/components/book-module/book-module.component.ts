@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {BookModuleService} from '../../services/book-module.service';
 import {SalonInfoService} from '../../services/salon-info.service';
-import {combineLatest, ReplaySubject, Subscription} from 'rxjs';
+import {combineLatest, ReplaySubject} from 'rxjs';
 import {SalonInfo} from '../../Interfaces/salon-info.interface';
 import {Professional} from '../../Interfaces/professional.interface';
 import {debounceTime, takeUntil} from 'rxjs/internal/operators';
@@ -194,7 +194,10 @@ export class BookModuleComponent implements OnInit, OnDestroy {
     this.selectedServiceGroup = group;
     this.displayedProfessionals = this.services2professionalMap.get(service.service.id);
     if (this.selectedProfessionalProfile !== undefined) {
-      if (this.selectedProfessionalProfile.id && this.selectedDay) {
+      if (this.selectedProfessionalProfile.id && this.selectedDay && this.professionalHours.length > 0) {
+        const calcServiceTimeToTimeSlot = this.calcServiceTimeToTimeSlot(this.selectedService.service.minutes);
+        this.professionalHours = this.getFilteredTimeSlots(this.professionalHours, calcServiceTimeToTimeSlot);
+      } else if (!!this.selectedDay) {
         this.getProfessionalHours(this.selectedProfessionalProfile.id, this.selectedDay);
       }
     }
@@ -205,6 +208,7 @@ export class BookModuleComponent implements OnInit, OnDestroy {
     group.services.splice(this.selectedServiceIndex, 0, this.selectedService);
     this.selectedService = undefined;
     this.selectedSlotTime = undefined;
+    this.selectedDay = '';
     this.displayedProfessionals = JSON.parse(JSON.stringify(this.salonProfessionals));
   }
 
@@ -271,7 +275,7 @@ export class BookModuleComponent implements OnInit, OnDestroy {
         this.professionalHours = this.getFilteredTimeSlots(timeSlotsArr, selectedTimeSlots);
 
         this.professionalHours = timeSlotsArr
-          .map((k: { time: string, availability: string , disableStatus: boolean}) => {
+          .map((k: { time: string, availability: string, disableStatus: boolean }) => {
             const date = new Date(
               parseInt(20 + this.selectArrDate[0], 10),
               this.selectArrDate[1] - 1,
@@ -309,7 +313,7 @@ export class BookModuleComponent implements OnInit, OnDestroy {
 
   private getFilteredTimeSlots(timeSlots, selectedSlotsCount): {}[] {
     const resultSlots = timeSlots.slice();
-    let timeSlotsCount = resultSlots.length;
+    const timeSlotsCount = resultSlots.length;
     let currentSlotCounter = 0;
 
     while (currentSlotCounter < timeSlotsCount) {
