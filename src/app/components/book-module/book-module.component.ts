@@ -25,6 +25,7 @@ export class BookModuleComponent implements OnInit, OnDestroy {
   public selectedProfessionalProfile: Professional;
   public salonAvatar;
   public professionalHours: {}[] = [];
+  public professionalHoursFiltered: {}[] = [];
   public searchControl: FormControl = new FormControl();
   public searchStr = '';
   public selectedHours: boolean;
@@ -196,10 +197,11 @@ export class BookModuleComponent implements OnInit, OnDestroy {
     if (this.selectedProfessionalProfile !== undefined) {
       if (this.selectedProfessionalProfile.id && this.selectedDay && this.professionalHours.length > 0) {
         const calcServiceTimeToTimeSlot = this.calcServiceTimeToTimeSlot(this.selectedService.service.minutes);
-        this.professionalHours = this.getFilteredTimeSlots(this.professionalHours, calcServiceTimeToTimeSlot);
-      } else if (!!this.selectedDay) {
-        this.getProfessionalHours(this.selectedProfessionalProfile.professional.id, this.selectedDay);
+        this.professionalHoursFiltered = this.getFilteredTimeSlots(this.professionalHours, calcServiceTimeToTimeSlot);
       }
+    }
+    if (this.selectedSlotTime) {
+      this.setSelectArrTimeSlot();
     }
   }
 
@@ -208,7 +210,7 @@ export class BookModuleComponent implements OnInit, OnDestroy {
     group.services.splice(this.selectedServiceIndex, 0, this.selectedService);
     this.selectedService = undefined;
     this.selectedSlotTime = undefined;
-    this.selectedDay = '';
+    this.professionalHoursFiltered = this.professionalHours.slice();
     this.displayedProfessionals = JSON.parse(JSON.stringify(this.salonProfessionals));
   }
 
@@ -255,10 +257,7 @@ export class BookModuleComponent implements OnInit, OnDestroy {
       weekDay: viewData.slice(0, 3)
     };
     this.selectArrDate.push(year, month, day);
-    if (this.selectedService) {
-      this.getProfessionalHours(this.selectedProfessionalProfile.professional.id, this.selectedDay);
-    }
-
+    this.getProfessionalHours(this.selectedProfessionalProfile.professional.id, this.selectedDay);
   }
 
   private getProfessionalHours(professionalId, dateFromUser) {
@@ -271,8 +270,6 @@ export class BookModuleComponent implements OnInit, OnDestroy {
             timeSlotsArr.push({time: k, availability: timeSlots[k]});
           }
         }
-        const selectedTimeSlots = this.calcServiceTimeToTimeSlot(this.selectedService.service.minutes);
-        this.professionalHours = this.getFilteredTimeSlots(timeSlotsArr, selectedTimeSlots);
 
         this.professionalHours = timeSlotsArr
           .map((k: { time: string, availability: string, disableStatus: boolean }) => {
@@ -284,6 +281,14 @@ export class BookModuleComponent implements OnInit, OnDestroy {
             const dateStr = date.toTimeString().slice(0, 5);
             return {time: dateStr, availability: k.availability, timeMS: k.time, disableStatus: k.disableStatus};
           });
+
+        if (this.selectedService) {
+          const selectedTimeSlots = this.calcServiceTimeToTimeSlot(this.selectedService.service.minutes);
+          this.professionalHoursFiltered = this.getFilteredTimeSlots(this.professionalHours, selectedTimeSlots);
+        } else {
+          this.professionalHoursFiltered = this.professionalHours.slice();
+        }
+
         this.selectedHours = true;
       });
 
@@ -295,16 +300,22 @@ export class BookModuleComponent implements OnInit, OnDestroy {
       e.preventDefault();
     } else {
       this.selectedSlotTime = timeSlot;
-      const serviceMin = this.selectedService.service.minutes;
-      const serviceDurationInMilliseconds = serviceMin * 60000;
-      const date = new Date(
-        parseInt(20 + this.selectArrDate[0], 10),
-        this.selectArrDate[1] - 1,
-        parseInt(this.selectArrDate[2], 10));
-      const startMsOfSelectedDateTimeSlot = date.getTime() + parseInt(timeSlot.timeMS, 10);
-      const endMsOfSelectedDateTimeSlot = startMsOfSelectedDateTimeSlot + serviceDurationInMilliseconds;
-      this.selectArrTimeSlot = [startMsOfSelectedDateTimeSlot, endMsOfSelectedDateTimeSlot];
+      if (this.selectedService) {
+        this.setSelectArrTimeSlot();
+      }
     }
+  }
+
+  private setSelectArrTimeSlot() {
+    const serviceMin = this.selectedService.service.minutes;
+    const serviceDurationInMilliseconds = serviceMin * 60000;
+    const date = new Date(
+      parseInt(20 + this.selectArrDate[0], 10),
+      this.selectArrDate[1] - 1,
+      parseInt(this.selectArrDate[2], 10));
+    const startMsOfSelectedDateTimeSlot = date.getTime() + parseInt(this.selectedSlotTime.timeMS, 10);
+    const endMsOfSelectedDateTimeSlot = startMsOfSelectedDateTimeSlot + serviceDurationInMilliseconds;
+    this.selectArrTimeSlot = [startMsOfSelectedDateTimeSlot, endMsOfSelectedDateTimeSlot];
   }
 
   private calcServiceTimeToTimeSlot(duration) {
@@ -312,7 +323,7 @@ export class BookModuleComponent implements OnInit, OnDestroy {
   }
 
   private getFilteredTimeSlots(timeSlots, selectedSlotsCount): {}[] {
-    const resultSlots = timeSlots.slice();
+    const resultSlots = timeSlots.map(slot => Object.assign({}, slot));
     const timeSlotsCount = resultSlots.length;
     let currentSlotCounter = 0;
 

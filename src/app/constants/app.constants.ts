@@ -2,10 +2,5 @@ export const apiUrl = 'https://3.120.139.153:32443/ciu-rest/';
 export const timeZone = 'UTC';
 export const defaultSalonDescription = 'Const: This description const';
 
-export const tokenConst = 'Bearer ' +
-  'B6gHgYupV1jTo8tIKBGcsfEDo0zeE28SOYY5fVpskffd9/PsxOOAOLBj+OOFMROpEUjyhkhl/' +
-  'DpnRn71NCWjoOEA7LX6oOx0P18s2jVcStkFN6EmbCJGFS7nSaVCSsOZHmjU4OBz7UBpZSJt6PIRuTIYi75FzDQxZhYIeCrL7iDvn/' +
-  'Au9waUewpoO7oFnDLqYKgDuDxDpGpJv/lIQUMOlhBt4i5wkvKD/qCmgqlG8G2rkAKtwyCWB8BcBRUIQl2Vh50jWxDti3xP1Kk37v0P7yjRc2QKOG2+' +
-  'uodIXb7Y3HIcOIGs3PmJwiv++tm2CiIyLKYJKLUzx3qwVe0zah5SziKmzXDMAsCjnDIDztp7iDz6SxzowzZCeFCm+6Z/DmeTFzhBwfr7lOdo4Kv1Px2PE/' +
-  'UX4EOr1UIdi8levqxqSnoSsFIHRfFPKEklMBUbFEuE';
+export const tokenConst = `Bearer hpTDFqsTYWNwgDwJAtfTgKN+MbZADFE4CwsDWcxydCdH/MCN/RY9CdLR2xaSAL8pHBnOpUnFBWTxIGUxoW9UECrlveqkxT18AEvYmoGms73XUVSzQRIwEvjFb6E1Hwlej03uDVLPvo5I8yKdgA56hkHwN53zn+OWQvab72zlBWIyA9FcShh8xaRkeVI+EiUnF3p1S1lNR9z0iNXghpYWpvuUTSEJEByxBjoMKhZmvXe3guVQCshZEkL8RkhcNrhwNRu16S2s7qjSjVOkpsjfcvxm2HctY7nmNo2t8vWXfrdYzpQ2PIcV8vFFSbivUpvvuPCefMjglJ+Hjl27Cubp2nWQSexLD8OdhnkNawji4qU5a3MQi9VCbNOFI3o1KizjozgBlre8CWtV41qk39z2V92p3Qj25OPi6+93Zy/nC4NR4NUUvokUDRjVdUcEKl1W`;
 

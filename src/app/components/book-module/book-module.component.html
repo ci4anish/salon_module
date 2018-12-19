@@ -23,22 +23,17 @@
         <h3 class="select_hour">Select hour</h3>
       </div>
       <div class="wrapper_space_scroll" *ngIf="selectedDateFromUser &&
-       !!selectedProfessionalProfile && selectedService">
+       !!selectedProfessionalProfile">
         <div class="wrapper_hours_slots">
           <ul class="">
             <li class="time_slot_wrapper"
-                *ngFor="let slotTime of professionalHours"
+                *ngFor="let slotTime of professionalHoursFiltered"
                 [class.selected]="slotTime === selectedSlotTime"
                 [class.disabled]="slotTime.disableStatus"
                 [class.busy]="slotTime.availability === 'busy'"
                 (click)="selectTimeSlot($event, slotTime)">
               <div class="dis_flex time_slot_container ">
                 <div class="time_slot">{{slotTime.time}}</div>
-                <div class="price">
-                  <div *ngIf="selectedService">
-                    {{selectedService.service.basePrice}}&euro;
-                  </div>
-                </div>
               </div>
 
             </li>
