@@ -3,7 +3,7 @@
 <div class="wrapper_book-module dis_flex">
   <div class="wrapper_professional-info">
     <app-select-beautician [professionals]="displayedProfessionals"
-                           [selectedId]="selectedProfessionalId"
+                           #professionalsSelect
                            (selectProfessional)="selectProfessional($event)"></app-select-beautician>
 
     <div class="available_hours" *ngIf="selectedProfessionalProfile">
@@ -23,7 +23,7 @@
         <h3 class="select_hour">Select hour</h3>
       </div>
       <div class="wrapper_space_scroll" *ngIf="selectedDateFromUser &&
-       !!selectedProfessionalProfile">
+       !!selectedProfessionalProfile && professionalHoursFiltered">
         <div class="wrapper_hours_slots">
           <ul class="">
             <li class="time_slot_wrapper"

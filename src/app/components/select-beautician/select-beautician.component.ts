@@ -7,11 +7,10 @@ import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '
 })
 export class SelectBeauticianComponent implements OnChanges {
   @Input() professionals;
-  @Input() selectedId;
-
   @Output() selectProfessional: EventEmitter<number> = new EventEmitter();
 
   public disableSelectProfessionals = true;
+  public selectedId: number;
 
   constructor() {
   }
@@ -33,5 +32,9 @@ export class SelectBeauticianComponent implements OnChanges {
     this.selectProfessional.emit(undefined);
   }
 
+  // use from parent component
+  setSelectedId(selectedId: number){
+    this.selectedId = selectedId;
+  }
 
 }

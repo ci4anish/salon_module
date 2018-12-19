@@ -235,11 +235,11 @@ h3 {
   }
 
   &.disabled {
-    background-color: #c2c1c145
+    background-color: #9a9a9a45
   }
 
   &.busy {
-    background-color: #d0d0d09e
+    background-color: #9090909e
   }
 
   &:not(.busy):not(.disabled):hover {

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BookModuleService } from '../../services/book-module.service';
 import { SalonInfoService } from '../../services/salon-info.service';
@@ -16,11 +16,12 @@ import { timeZone, defaultProfessionalPhoto } from '../../constants';
   styleUrls: ['./book-module.component.scss']
 })
 export class BookModuleComponent implements OnInit, OnDestroy {
+  @ViewChild('professionalsSelect') professionalsSelect;
+
   public selectedSlotTime: any;
   public displayedServiceGroups;
   public displayedProfessionals;
   public selectedService: Service;
-  public selectedProfessionalId: number;
   public salonName: string;
   public selectedProfessionalProfile: Professional;
   public salonAvatar;
@@ -168,7 +169,6 @@ export class BookModuleComponent implements OnInit, OnDestroy {
     } else {
       this.getDisplayedServicesGroups(this.salonServices);
       this.selectedProfessionalProfile = undefined;
-      this.selectedProfessionalId = undefined;
       this.professionalHours = [];
       if (this.selectedService) {
         this.clearSelected();
@@ -398,8 +398,14 @@ export class BookModuleComponent implements OnInit, OnDestroy {
           this.selectedService = undefined;
           this.selectedDateFromUser = [];
           this.selectProfessional(undefined);
-          this.selectedProfessionalId = undefined;
+          this.professionalsSelect.setSelectedId(undefined);
           this.selectedDay = '';
+          this.professionalHoursFiltered = undefined;
+          this.selectArrDate = undefined;
+          this.selectArrTimeSlot = undefined;
+          this.selectedServiceGroup = undefined;
+          this.selectedServiceIndex = undefined;
+          this.selectedSlotTime = undefined;
           this.getDisplayedProfessionals();
         });
     }
