@@ -10,9 +10,7 @@ export class DatePickerComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    console.log(this.pickerElement)
   }
   log(event) {
-    console.log(event)
   }
 }

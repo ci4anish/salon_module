@@ -3,11 +3,10 @@ import {ActivatedRoute} from '@angular/router';
 import {SalonInfoService} from '../../services/salon-info.service';
 import {SalonInfo} from '../../Interfaces/salon-info.interface';
 import {AvailableHours} from '../../Interfaces/available-hours.interface';
-import {Professional} from '../../Interfaces/professional.interface';
 import {SalonGeo} from '../../Interfaces/salon-geo.interface';
 import {Review} from '../../Interfaces/review.interface';
 import {Portfolio} from '../../Interfaces/portfolio.interface';
-import {amenities, payments, socialLinks} from '../../constants';
+import {amenities, payments, socialLinks, defaultSalonDescription,defaultProfessionalPhoto} from '../../constants';
 
 @Component({
   selector: 'app-salon-details',
@@ -15,13 +14,13 @@ import {amenities, payments, socialLinks} from '../../constants';
   styleUrls: ['./salon-details.component.scss']
 })
 export class SalonDetailsComponent implements OnInit {
-
+  public salonGeoDeg;
   salonName: string;
   address;
   descriptionOfSalon: string;
   phoneNumber: string;
   salonId: number;
-  professionalsBySalon: Professional;
+  professionalsBySalon = [];
   weekTimeFrame;
   days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
   paymentMethods = [];
@@ -31,11 +30,38 @@ export class SalonDetailsComponent implements OnInit {
   portfolioImg = [];
   languages = <any>[];
   salonAmenities;
-  salonSocialLinks;
+  salonSocialLinks = [];
   amenities = amenities;
   socialLinks = socialLinks;
   payments = payments;
   salonAvatar;
+  defaultProfessionalPhoto = defaultProfessionalPhoto;
+  defaultSalonDescription = defaultSalonDescription;
+
+  public static calcDistance(lat1: number, lon1: number, lat2: number, lon2: number, unit: string): number {
+    if ((lat1 === lat2) && (lon1 === lon2)) {
+      return 0;
+    } else {
+      const radlat1 = Math.PI * lat1 / 180;
+      const radlat2 = Math.PI * lat2 / 180;
+      const theta = lon1 - lon2;
+      const radtheta = Math.PI * theta / 180;
+      let dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+      if (dist > 1) {
+        dist = 1;
+      }
+      dist = Math.acos(dist);
+      dist = dist * 180 / Math.PI;
+      dist = dist * 60 * 1.1515;
+      if (unit === 'K') {
+        dist = dist * 1.609344;
+      }
+      if (unit === 'N') {
+        dist = dist * 0.8684;
+      }
+      return dist;
+    }
+  }
 
   constructor(private salonDetailsService: SalonInfoService, private route: ActivatedRoute) {
   }
@@ -60,11 +86,11 @@ export class SalonDetailsComponent implements OnInit {
       });
 
     this.salonDetailsService.getSalonProfessionals(this.salonId)
-      .subscribe((data: Professional) => {
+      .subscribe((data: any) => {
         this.professionalsBySalon = data;
       });
 
-    this.salonDetailsService.getAvailabilityHours(12)
+    this.salonDetailsService.getAvailabilityHours(this.salonId)
       .subscribe((data: AvailableHours) => {
         const arrDate = data.weekTimeFrame;
         arrDate.forEach((day) => {
@@ -95,7 +121,9 @@ export class SalonDetailsComponent implements OnInit {
 
     this.salonDetailsService.getLocationPortfolio(this.salonId)
       .subscribe((data: Portfolio) => {
-        this.portfolioImg = data.image;
+        if (data !== null) {
+          this.portfolioImg = data.image;
+        }
       });
 
     this.getLocation();
@@ -112,40 +140,18 @@ export class SalonDetailsComponent implements OnInit {
         const userLong = position.coords.longitude;
         let salonLat;
         let salonLong;
-        this.salonDetailsService.getGeoLocationSalon(1)
+        this.salonDetailsService.getGeoLocationSalon(this.salonId)
           .subscribe((data: SalonGeo) => {
-            salonLat = data.deg.latitude;
-            salonLong = data.deg.longitude;
-            this.distance = this.calcDistance(userLat, userLong, salonLat, salonLong, 'K').toFixed(2);
+            if (data) {
+              this.salonGeoDeg = data.deg;
+              salonLat = data.deg.latitude;
+              salonLong = data.deg.longitude;
+              this.distance = SalonDetailsComponent.calcDistance(userLat, userLong, salonLat, salonLong, 'K').toFixed(2);
+            }
           });
       });
     } else {
-      alert('Geolocation error');
-    }
-  }
-
-  private calcDistance(lat1: number, lon1: number, lat2: number, lon2: number, unit: string): number {
-    if ((lat1 === lat2) && (lon1 === lon2)) {
-      return 0;
-    } else {
-      const radlat1 = Math.PI * lat1 / 180;
-      const radlat2 = Math.PI * lat2 / 180;
-      const theta = lon1 - lon2;
-      const radtheta = Math.PI * theta / 180;
-      let dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-      if (dist > 1) {
-        dist = 1;
-      }
-      dist = Math.acos(dist);
-      dist = dist * 180 / Math.PI;
-      dist = dist * 60 * 1.1515;
-      if (unit === 'K') {
-        dist = dist * 1.609344;
-      }
-      if (unit === 'N') {
-        dist = dist * 0.8684;
-      }
-      return dist;
+      console.error('Geolocation error');
     }
   }
 

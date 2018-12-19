@@ -1,5 +1,6 @@
 import {Component, ViewChild, Input} from '@angular/core';
 import {NguCarouselConfig} from '@ngu/carousel';
+import {defaultSliderPhoto} from '../../constants';
 
 
 @Component({
@@ -10,8 +11,8 @@ import {NguCarouselConfig} from '@ngu/carousel';
 export class SliderComponent {
   @Input() imageArr;
   @Input() salonId;
-  name = 'Angular';
-  slideNo = 0;
+
+  public defaultSliderPhoto = defaultSliderPhoto;
   withAnimation = true;
   resetAnimation = true;
 

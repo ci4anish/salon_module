@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="box_shadow-container">
+  <div class="box_shadow-container" *ngIf="arrBestComments.length > 0">
     <div class="wrapper_comments dis_flex" *ngFor="let item of arrBestComments; let i = index">
       <div class="wrapper_main-comment dis_flex">{{item.ratingOverall}} .
         <app-star-rating [starRating]="item.ratingOverall"></app-star-rating>
@@ -34,7 +34,7 @@
           </div>
 
         </div>
-        <div class="comments_item dis_flex">
+        <div class="comments_item dis_flex" *ngIf="!!item.content">
           <p>{{item.content}}</p>
         </div>
       </div>

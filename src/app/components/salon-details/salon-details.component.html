@@ -1,32 +1,37 @@
 <app-header [salonAvatar]="salonAvatar"></app-header>
-<app-slider [imageArr]="portfolioImg" [salonId]="salonId"></app-slider>
+<app-slider
+  *ngIf="portfolioImg.length > 0"
+  [imageArr]="portfolioImg"
+  [salonId]="salonId"></app-slider>
 <section class="salon_details text-center">
   <div class="container dis_flex">
     <div class="details_wrapper ">
-      <div class="wrappper_icons " >
-        <div class="wrapper_social-icons dis_flex" >
+      <div class="wrappper_icons">
+        <div class="wrapper_social-icons dis_flex" *ngIf="salonSocialLinks.length > 0">
           <div *ngFor="let link of salonSocialLinks">
             <a href="{{link.url}}" target="_blank">
               <i [ngClass]="socialLinks[link.id]"></i>
             </a>
           </div>
         </div>
-        <h3 class="beauticians_title text-center">Meet our beauticians</h3>
-        <div class="wrapper_beauticians-icons dis_flex">
-          <div class="personal_icon" *ngFor="let professional of professionalsBySalon">
-            <img src="{{professional.professional.avatar.url}}"
-                 alt="{{professional.professional.avatar.altText}}"
-                 class="beauticians_icon">
-            <div class="avatar_bg" ></div>
-          </div>
-        </div>
-      </div>
+        <div class="wrapper_meet" *ngIf="professionalsBySalon.length > 0">
+          <h3 class="beauticians_title text-center">Meet our beauticians</h3>
+          <div class="wrapper_beauticians-icons dis_flex">
+            <div class="personal_icon" *ngFor="let professional of professionalsBySalon"
+                 [ngSwitch]="!!professional.professional.avatar.url"
+            >
+              <img *ngSwitchCase="true"
+                   [src]="professional.professional.avatar.url"
+                   [alt]="professional.professional.avatar.altText"
+                   class="beauticians_icon">
 
-      <div class="wrapper_language text-center">
-        <h3>we speak</h3>
-        <div class="dis_flex wrapper_lang">
-          <div class="dis_flex" *ngFor="let language of languages">
-            <div class="lang">{{language}}</div>
+              <img *ngSwitchCase="false"
+                   [src]="defaultProfessionalPhoto"
+                   [alt]="'default photo'"
+                   class="beauticians_icon">
+
+              <div class="avatar_bg"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -34,21 +39,7 @@
     <div class="details_wrapper details_wrapper-top">
       <h5 class="salon_name">{{salonName}}</h5>
       <h6 class="salon_address">{{distance}}km - {{address}}</h6>
-      <p>{{descriptionOfSalon}}</p>
-      <div class="payments dis_flex">
-        <div class="payments_items dis_flex" >
-          <p class="title_payments">Payments</p>
-          <div *ngFor="let item of paymentMethods">
-          <div>
-            <i [ngClass]="payments[item.method]"></i>
-          </div>
-          </div>
-        </div>
-        <div class="payments_other" *ngFor="let amenity of salonAmenities">
-          <p>{{amenity}}</p>
-          <i [ngClass]="amenities[amenity]"></i>
-        </div>
-      </div>
+      <p>{{descriptionOfSalon || defaultSalonDescription}}</p>
     </div>
     <div class="details_wrapper">
       <app-star-rating
@@ -60,11 +51,42 @@
           <div *ngFor="let day of weekTimeFrame" class="style_calendar" [class.focus_day]="day.targetDay">
             <div class="style_text">{{day.weekDay}}</div>
             <div [class.close_day]="day.closeDay">
-              {{day.timeFrame.startTimeMS}} {{day.timeFrame.endTimeMS}}</div>
+              {{day.timeFrame.startTimeMS}} {{day.timeFrame.endTimeMS}}
+            </div>
           </div>
         </div>
       </div>
 
+    </div>
+  </div>
+  <div class="container dis_flex">
+    <div class="details_wrapper style_lang">
+      <div class="wrapper_language text-center">
+        <h3>We Speak</h3>`
+        <div class="dis_flex wrapper_lang">
+          <div class="dis_flex" *ngFor="let language of languages">
+            <div class="lang">{{language}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="details_wrapper details_wrapper-top">
+      <div class="payments dis_flex" *ngIf="paymentMethods.length > 0">
+        <div class="payments_items dis_flex">
+          <p class="title_payments">Payments</p>
+          <div *ngFor="let item of paymentMethods">
+            <div>
+              <i [ngClass]="payments[item.method]"></i>
+            </div>
+          </div>
+        </div>
+        <div class="payments_other" *ngFor="let amenity of salonAmenities">
+          <p>{{amenity}}</p>
+          <i [ngClass]="amenities[amenity]"></i>
+        </div>
+      </div>
+    </div>
+    <div class="details_wrapper">
       <div class="contact_info ">
         <a href="tel:{{phoneNumber}}" class="dis_flex text-center">
           <div class="phone_icon">
@@ -81,8 +103,8 @@
   </div>
 </section>
 <app-salon-services></app-salon-services>
-<app-comments></app-comments>
-<app-map></app-map>
+<app-comments [salonId]="salonId"></app-comments>
+<app-map [salonGeoDeg]="salonGeoDeg"></app-map>
 <app-footer></app-footer>
 
 

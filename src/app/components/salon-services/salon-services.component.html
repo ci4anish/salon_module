@@ -10,7 +10,6 @@
             <h4 class="test_box">Show service</h4>
             <h4 class="test_box">Price</h4>
             <h4 class="test_box">Gender</h4>
-            <h4 class="test_box">Description</h4>
             <h4 class="test_box">Duration min</h4>
             <h4 class="test_box"></h4>
           </div>
@@ -27,14 +26,13 @@
            <div class="test_box">{{subService.service.name}}</div>
            <div class="test_box">{{subService.service.basePrice}} &euro;</div>
            <div class="test_box">{{subService.service.gender}}</div>
-           <div class="test_box">{{subService.service.description}}</div>
            <div class="test_box">{{subService.service.minutes}} min</div>
            <div class="test_box">
              <button
                mat-stroked-button
                color="primary"
-               routerLink="/book-module"
-               [queryParams]="{serviceId: subService.service.id, salonId: salonId}">Book now</button>
+               routerLink="book-module"
+               [queryParams]="{serviceId: subService.service.id}">Book now</button>
            </div>
          </div>
         </div>

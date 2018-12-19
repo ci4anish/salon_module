@@ -11,7 +11,7 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {path: 'salon/:id', component: SalonDetailsComponent},
-  {path: 'book-module', component: BookModuleComponent},
+  {path: 'salon/:locationId/book-module', component: BookModuleComponent},
 ];
 
 @NgModule({

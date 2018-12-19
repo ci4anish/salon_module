@@ -81,10 +81,6 @@ h3 {
   justify-content: space-between;
   padding: 10px 25px 10px 5px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  cursor: pointer;
-  &:hover {
-    background-color: #e8e3e3;
-  }
 }
 .selected {
   background-color: #e8e3e3;
@@ -221,7 +217,6 @@ h3 {
   text-align: center;
 }
 .search_treatment {
-
   margin-top: 40px;
   border: 1px solid gray;
   padding: 10px;
@@ -230,3 +225,26 @@ h3 {
   width: 97%;
   outline: none;
 }
+
+.time_slot_wrapper {
+  cursor: pointer;
+
+  &.busy, &.disabled{
+    .time_slot_container{
+      cursor: not-allowed;
+    }
+  }
+
+  &.disabled {
+    background-color: #c2c1c145
+  }
+
+  &.busy {
+    background-color: #d0d0d09e
+  }
+
+  &:not(.busy):not(.disabled):hover {
+    background-color: #e8e3e3;
+  }
+}
+

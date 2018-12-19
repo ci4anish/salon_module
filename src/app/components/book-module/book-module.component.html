@@ -6,7 +6,7 @@
                            [selectedId]="selectedProfessionalId"
                            (selectProfessional)="selectProfessional($event)"></app-select-beautician>
 
-    <div class="available_hours" *ngIf="selectedProfessionalProfile && !!selectedService">
+    <div class="available_hours" *ngIf="selectedProfessionalProfile">
       <div class="wrapper_date_picker">
         <mat-form-field>
           <input matInput
@@ -22,20 +22,18 @@
       <div class="hours_title">
         <h3 class="select_hour">Select hour</h3>
       </div>
-
       <div class="wrapper_space_scroll" *ngIf="selectedDateFromUser &&
-       !!selectedProfessionalProfile && !!selectedService">
+       !!selectedProfessionalProfile && selectedService">
         <div class="wrapper_hours_slots">
           <ul class="">
-            <li *ngFor="let slotTime of professionalHours"
-                [class.selected]="slotTime === selectedslotTime"
-                (click)="selectTimeSlot(slotTime)"            >
+            <li class="time_slot_wrapper"
+                *ngFor="let slotTime of professionalHours"
+                [class.selected]="slotTime === selectedSlotTime"
+                [class.disabled]="slotTime.disableStatus"
+                [class.busy]="slotTime.availability === 'busy'"
+                (click)="selectTimeSlot($event, slotTime)">
               <div class="dis_flex time_slot_container ">
                 <div class="time_slot">{{slotTime.time}}</div>
-                <div class="time_slot_icon" #wrap_timeSlot>
-                  <i class="far fa-check"></i>
-                </div>
-                <div class="time_status">{{slotTime.availability}}</div>
                 <div class="price">
                   <div *ngIf="selectedService">
                     {{selectedService.service.basePrice}}&euro;
@@ -113,7 +111,7 @@
     </div>
     <div class="wrapper_total">
       <div *ngIf="selectedProfessionalProfile">
-        <div class="wrapper_date_select dis_flex" *ngIf="selectedDateFromUser && selectedslotTime">
+        <div class="wrapper_date_select dis_flex" *ngIf="selectedDateFromUser && selectedSlotTime">
           <div class="dis_flex header_boxes">
             <div class="date_weekday">
               {{selectedDateFromUser.weekDay}}
@@ -126,12 +124,15 @@
             </div>
           </div>
           <div class="date_time">
-            <p >{{selectedslotTime.time}}</p>
+            <p>{{selectedSlotTime.time}}</p>
           </div>
         </div>
         <div class="wrapper_total_logo">
-          <div class="professional_logo dis_flex">
-            <img src="{{selectedProfessionalProfile.professional.avatar.url}}" alt="">
+          <div class="professional_logo dis_flex" [ngSwitch]="!!selectedProfessionalProfile.professional.avatar.url">
+            <img *ngSwitchCase="true"
+                 [src]="selectedProfessionalProfile.professional.avatar.url">
+            <img *ngSwitchCase="false"
+                 [src]="defaultProfessionalPhoto">
           </div>
         </div>
         <div class="job_content dis_flex" *ngIf="selectedService">
@@ -147,7 +148,7 @@
               <div class="job_price">{{selectedService.service.basePrice}}&euro;</div>
               <div class="book_now-btn text-center">
                 <button mat-raised-button color="primary"
-                        [disabled]="!this.selectedslotTime"
+                        [disabled]="!this.selectedSlotTime"
                         (click)="bookNow()">Book now
                 </button>
               </div>
@@ -159,9 +160,9 @@
   </div>
 </div>
 
-<button mat-raised-button color="primary" style="margin: 30px 10px" routerLink="../salon/{{salonId}}"
-        >salon-mock</button>
-
+<button mat-raised-button color="primary" style="margin: 30px 10px" routerLink="../../../salon/{{salonId}}"
+>salon-mock
+</button>
 
 
 <!--<app-date-picker></app-date-picker>-->

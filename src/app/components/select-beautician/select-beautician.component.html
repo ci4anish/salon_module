@@ -1,12 +1,11 @@
 <p class="select_title">Select beautician</p>
 
   <mat-form-field>
-    <mat-select [(ngModel)]="selectedId" (selectionChange)="onSelect($event)">
+    <mat-select [(ngModel)]="selectedId" (selectionChange)="onSelect($event)" [disabled]="disableSelectProfessionals">
       <mat-option *ngFor="let professional of professionals" [value]="professional.id">
         {{professional.professional.user.person.firstName}}
       </mat-option>
     </mat-select>
   </mat-form-field>
   <button mat-icon-button (click)="clearInput()" [disabled]="!selectedId"> <i class="material-icons"> clear </i></button>
-
 

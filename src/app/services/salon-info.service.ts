@@ -4,7 +4,8 @@ import {SalonGeo} from '../Interfaces/salon-geo.interface';
 import {Observable, of} from 'rxjs';
 import {AvailableHours} from '../Interfaces/available-hours.interface';
 import {Professional} from '../Interfaces/professional.interface';
-import {apiUrl} from '../constants';
+import {apiUrl, mock} from '../constants';
+
 
 @Injectable({
   providedIn: 'root'
@@ -28,48 +29,39 @@ export class SalonInfoService {
 
   }
 
-  getSalonInfo(salon: number): any {
-    return this.http.get(this.url + 'location/' + salon, this.httpOptions);
+  getSalonInfo(salonId: number): any {
+    return this.http.get(this.url + 'location/' + salonId, this.httpOptions);
   }
 
   getSalonProfessionals(salonId: number): Observable<Professional> {
     return this.http.get<Professional>(this.url + 'location/' + salonId + '/professionals ');
   }
 
-  getAvailableHoursByProfessional(id: number, dateSelect: string, timeZone: string) {
-    return this.http.get(this.url + 'schedule/professional/' + id + '/yymmdd/' + dateSelect + '/timezone/' + timeZone + '/merged');
-  }
+  getAvailableHoursByProfessional(professionalId: number, dateSelect: string, timeZone: string) {
+    //   return this.http.get(this.url + 'schedule/professional/' + professionalId + '/yymmdd/' + dateSelect + '/timezone/' + timeZone +
+    //     '/merged' + '?includeAvailabilityHours=true', this.httpOptions);
 
+    // }
+    return of(mock)
+  }
   getAvailableDaysByProfessional(salonId: number, professionalId: number) {
-    return this.http.get(this.url + 'location/' + salonId + '/professional/' + professionalId + '/availabilityhours');
+    return this.http.get(this.url + 'location/' + salonId + '/professional/' + professionalId + '/availabilityhours', this.httpOptions);
   }
-
-  // getAdminsBySalon(salon: number): any {
-  //   return this.http.get(this.url + salon + '/admins ');
-  // }
-  //
-  // getUser(salon: number) {
-  //
-  // }
 
   getAvailabilityHours(salonId: number): Observable<AvailableHours> {
     return this.http.get<AvailableHours>(this.url + 'availabilityhours/' + salonId);
   }
 
-  getGeoLocationSalon(salonId?: number): Observable<SalonGeo> {
-
-    // location #3 hasn't response to geo
-    // i'm using location #1 , because it has response
-
+  getGeoLocationSalon(salonId: number): Observable<SalonGeo> {
     return this.http.get<SalonGeo>(this.url + 'location/' + salonId + '/geo');
   }
 
-  getLocationGroupAll(salonId?: number) {
+  getLocationGroupAll(salonId: number) {
     return this.http.get(this.url + 'location/' + salonId + '/group/all');
   }
 
   getLocationReviews(salonId: number) {
-    return this.http.get(this.url + 'location/' + salonId + '/reviews');
+    return this.http.get(this.url + 'location/' + salonId + '/reviews?limit=3');
   }
 
   getLocationServiceAll(salonId: number) {

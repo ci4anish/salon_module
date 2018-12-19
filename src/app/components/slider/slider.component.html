@@ -1,9 +1,14 @@
 <div class="wrapper_slider">
-  <a href="#" class="slider_link" routerLink="/book-module" [queryParams]="{salonId: salonId}">Book now</a>
+  <a href="#" class="slider_link" routerLink="book-module">Book now</a>
   <ngu-carousel #myCarousel [inputs]="carouselConfig" [dataSource]="imageArr">
-    <ngu-tile *nguCarouselDef="let item;" >
-      <div class="tile" >
-        <img src="{{item.url}}" alt="{{item.altText}}">
+    <ngu-tile *nguCarouselDef="let item">
+      <div class="tile" [ngSwitch]="!!item.url">
+        <img
+          *ngSwitchCase="true"
+          [src]="item.url" [alt]="item.altText">
+        <img
+          *ngSwitchCase="false"
+          [src]="defaultSliderPhoto" [alt]="'default'">
       </div>
     </ngu-tile>
     <button NguCarouselNext class="rightRs">></button>
