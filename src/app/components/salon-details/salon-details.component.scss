@@ -1,7 +1,30 @@
+$line_height_row: 19;
+
+
+.salon_description {
+  max-height: 12 * $line_height_row + px;
+  overflow-y: auto;
+}
+.salon_description::-webkit-scrollbar {
+  width: 6px;
+}
+.salon_description::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  margin-left: 10px;
+}
+.salon_description::-webkit-scrollbar-thumb {
+  background: #888;
+}
+.salon_description::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+.salon_description::-webkit-scrollbar {
+  width: 6px;
+}
 .salon_details {
   padding-top: 25px;
   padding-bottom: 25px;
-  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.45);
+  box-shadow: 0 0 5px 0 rgba(0,0,0,0.45);
 
 }
 .beauticians_icon {

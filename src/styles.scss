@@ -22,11 +22,11 @@
 .salon_address {
   font-weight: 400;
   font-size: 20px;
-  margin-bottom: 100px;
+  margin-bottom: 20px;
 
 }
 .container {
-  padding: 0 100px;
+  padding: 0 50px;
   margin: 0 auto;
 }
 .text-right {
@@ -34,4 +34,20 @@
 }
 body {
   background-image: url("./assets/main_bg.jpg");
+}
+
+@media only screen and (min-width: 800px) {
+  .media_container {
+    padding: 20px 50px;
+  }
+}
+@media only screen and (min-width: 1140px) {
+  .media_container {
+    padding: 20px 150px;
+  }
+}
+@media only screen and (min-width: 1400px) {
+  .media_container {
+    padding: 20px 250px;
+  }
 }

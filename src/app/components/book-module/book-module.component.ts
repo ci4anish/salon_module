@@ -1,18 +1,19 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { MatSnackBar } from '@angular/material';
-import { BookModuleService } from '../../services/book-module.service';
-import { SalonInfoService } from '../../services/salon-info.service';
-import { combineLatest, ReplaySubject } from 'rxjs';
-import { SalonInfo } from '../../Interfaces/salon-info.interface';
-import { Professional } from '../../Interfaces/professional.interface';
-import { debounceTime, takeUntil } from 'rxjs/internal/operators';
-import { FormControl } from '@angular/forms';
-import { Service } from '../../Interfaces/service.interface';
-import { timeZone, defaultProfessionalPhoto } from '../../constants';
-import { HttpErrorResponse } from '@angular/common/http';
-import { catchError } from 'rxjs/internal/operators';
-import { throwError } from 'rxjs';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ActivatedRoute, Event} from '@angular/router';
+import {MatSnackBar} from '@angular/material';
+import {BookModuleService} from '../../services/book-module.service';
+import {SalonInfoService} from '../../services/salon-info.service';
+import {combineLatest, ReplaySubject} from 'rxjs';
+import {SalonInfo} from '../../Interfaces/salon-info.interface';
+import {Professional} from '../../Interfaces/professional.interface';
+import {debounceTime, takeUntil} from 'rxjs/internal/operators';
+import {FormControl} from '@angular/forms';
+import {Service} from '../../Interfaces/service.interface';
+import {timeZone, defaultProfessionalPhoto} from '../../constants';
+import {HttpErrorResponse} from '@angular/common/http';
+import {catchError} from 'rxjs/internal/operators';
+import {throwError} from 'rxjs';
+import {TimeSlotFiltered} from '../../Interfaces/time-slot-filtered';
 
 
 @Component({
@@ -30,8 +31,8 @@ export class BookModuleComponent implements OnInit, OnDestroy {
   public salonName: string;
   public selectedProfessionalProfile: Professional;
   public salonAvatar;
-  public professionalHours: {}[] = [];
-  public professionalHoursFiltered: {}[] = [];
+  public professionalHours: TimeSlotFiltered[] = [];
+  public professionalHoursFiltered: TimeSlotFiltered[] = [];
   public searchControl: FormControl = new FormControl();
   public searchStr = '';
   public selectedHours: boolean;
@@ -175,6 +176,7 @@ export class BookModuleComponent implements OnInit, OnDestroy {
     } else {
       this.getDisplayedServicesGroups(this.salonServices);
       this.selectedProfessionalProfile = undefined;
+      this.professionalHoursFiltered = [];
       this.professionalHours = [];
       if (this.selectedService) {
         this.clearSelected();
@@ -204,6 +206,16 @@ export class BookModuleComponent implements OnInit, OnDestroy {
       if (this.selectedProfessionalProfile.id && this.selectedDay && this.professionalHours.length > 0) {
         const calcServiceTimeToTimeSlot = this.calcServiceTimeToTimeSlot(this.selectedService.service.minutes);
         this.professionalHoursFiltered = this.getFilteredTimeSlots(this.professionalHours, calcServiceTimeToTimeSlot);
+        if (this.selectedSlotTime) {
+          const ind = this.professionalHoursFiltered.findIndex((slot: TimeSlotFiltered) => slot.time === this.selectedSlotTime.time);
+          if (this.professionalHoursFiltered[ind].disableStatus !== true) {
+            this.selectedSlotTime = this.professionalHoursFiltered[ind];
+          } else {
+            this.snackBar.open('This time slot is busy, please choose another slot', null, {
+              duration: 5000,
+            });
+          }
+        }
       }
     }
     if (this.selectedSlotTime) {

@@ -1,8 +1,4 @@
-.wrapper_services {
-  display: flex;
-  flex-wrap: wrap;
-  padding-top: 50px;
-}
+
 .box_service {
   width: 70%;
 }
@@ -15,9 +11,11 @@
   border-bottom: 1px solid #ebf5fa;
 }
 .box_shadow-container {
-  padding: 0 100px;
-  margin: 0 auto;
-  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.45);
+  padding: 10px 20px;
+  margin: 20px auto;
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.45);
 
 }
-
+.service_item {
+  justify-content: center;
+}
